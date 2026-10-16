@@ -7,23 +7,29 @@
 <meta name="description" content="Fresas con crema especial, chocolate de fuente infinita y toppings hechos en casa. Sucursales en Balbuena, Narvarte, Moctezuma y Condesa (CDMX). Pide en Uber Eats o Rappi.">
 <meta property="og:title" content="Lady Fresa · Date el gusto">
 <meta property="og:description" content="Fresas con crema, chocolate de fuente infinita y toppings hechos en casa en la CDMX.">
-<meta property="og:image" content="https://www.ladyfresa.com/assets/img/pistachona.webp">
+<meta property="og:image" content="https://www.ladyfresa.com/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.ladyfresa.com/assets/img/og.jpg">
+<meta name="theme-color" content="#A6182E">
 <meta property="og:url" content="https://www.ladyfresa.com/">
 <meta property="og:type" content="website">
 <link rel="icon" href="assets/img/icono-192.png">
 <link rel="canonical" href="https://www.ladyfresa.com/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Lady Fresa","url":"https://www.ladyfresa.com","logo":"https://www.ladyfresa.com/assets/img/logo-vino.png","sameAs":["https://www.instagram.com/ladyfresamx"]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&amp;family=Caveat+Brush&amp;display=swap" rel="stylesheet">
 <style>
 @font-face{font-family:'Brice';src:url(assets/fonts/brice-black.otf) format('opentype');font-weight:900;font-display:swap}
 @font-face{font-family:'Brice';src:url(assets/fonts/brice-semibold.otf) format('opentype');font-weight:600;font-display:swap}
-@font-face{font-family:'NothingPena';src:url(assets/fonts/nothingpena.otf) format('opentype');font-display:swap}
+@font-face{font-family:'NothingPena';src:url(assets/fonts/nothingpena.otf) format('opentype');font-display:swap;unicode-range:U+0000-00BF,U+00D7,U+00F7,U+2000-206F}
 @font-face{font-family:'Instrument Serif';src:url(assets/fonts/instrument-regular.ttf) format('truetype');font-style:normal;font-display:swap}
 @font-face{font-family:'Instrument Serif';src:url(assets/fonts/instrument-italic.ttf) format('truetype');font-style:italic;font-display:swap}
 body{margin:0;background:#FFF7F3}
 a{color:#A6182E}a:hover{color:#7A0F20}
 </style>
+<style>.lf-burger{display:none;align-items:center;justify-content:center;width:48px;height:48px;border:2px solid #A6182E;border-radius:999px;background:transparent;color:#A6182E;cursor:pointer;padding:0} @media (max-width:760px){header nav{display:none!important;width:100%;flex-direction:column;align-items:flex-start!important;gap:6px!important;padding:8px 0 6px} header nav a{min-height:44px;display:inline-flex;align-items:center;font-size:18px} header nav.lf-open{display:flex!important} .lf-burger{display:inline-flex}}</style>
 <style>html{scroll-behavior:smooth} img{max-width:100%} @media (max-width:640px){h1{font-size:64px!important} h2{font-size:42px!important} section>div[style*="border-radius: 40px"]{padding:32px 22px!important}}</style>
 </head>
 <body>
@@ -36,7 +42,8 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <a href="#inicio" aria-label="Lady Fresa, inicio" style="display: flex; align-items: center">
 <img src="assets/img/logo-vino.png" alt="Lady Fresa" style="height: 56px; width: auto; display: block">
 </a>
-<nav aria-label="Principal" style="display: flex; flex-wrap: wrap; align-items: center; gap: 24px; font-weight: 600; font-size: 16px">
+<button class="lf-burger" type="button" aria-label="Abrir menú" aria-expanded="false" onclick="var n=document.querySelector('header nav');var o=n.classList.toggle('lf-open');this.setAttribute('aria-expanded',o);this.setAttribute('aria-label',o?'Cerrar menú':'Abrir menú')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+<nav aria-label="Principal" onclick="if(event.target.tagName==='A'&&innerWidth<=760){this.classList.remove('lf-open')}" style="display: flex; flex-wrap: wrap; align-items: center; gap: 24px; font-weight: 600; font-size: 16px">
 <a href="#menu" style="text-decoration: none">Menú</a>
 <a href="#sucursales" style="text-decoration: none">Sucursales</a>
 <a href="#lovers" style="text-decoration: none">Lady Lovers</a>
@@ -51,7 +58,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <section id="inicio" style="padding: 64px 24px 88px; overflow: hidden; background: #A6182E; color: #FFF7F3">
 <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 48px">
 <div style="flex: 1 1 460px; min-width: 0">
-<p style="margin: 0 0 8px; font-family: 'NothingPena', cursive; font-size: 34px; color: #F6D6DA">Hoy no se cuentan calorías.</p>
+<p style="margin: 0 0 8px; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 34px; color: #F6D6DA">Hoy no se cuentan calorías.</p>
 <h1 style="margin: 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 104px; line-height: 0.95; text-transform: uppercase; color: #FFF7F3">Date el gusto.</h1>
 <p style="margin: 28px 0 0; font-size: 20px; max-width: 520px">Fresa fresca, nuestra crema especial y chocolate que no deja de caer. Aquí no se pide perdón, se pide doble topping.</p>
 <div style="margin-top: 36px; display: flex; flex-wrap: wrap; gap: 14px">
@@ -69,12 +76,12 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <!-- ARMA TU ANTOJO -->
 <section style="background: #FFFFFF; color: #3A1018; padding: 80px 24px; border-bottom: 1px solid #F1D9DC">
 <div style="max-width: 1200px; margin: 0 auto">
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 32px; color: #A6182E">Hecho a tu antojo</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 32px; color: #A6182E">Hecho a tu antojo</p>
 <h2 style="margin: 4px 0 40px; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 60px; line-height: 1; text-transform: uppercase; color: #A6182E">Arma tu antojo</h2>
 
 <div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: stretch">
 <div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
-<h3 style="margin: 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 28px; color: #A6182E">1. Escoge tu fruta <span style="font-family: 'NothingPena', cursive; font-weight: 400; font-size: 24px">(no juzgamos si son las dos)</span></h3>
+<h3 style="margin: 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 28px; color: #A6182E">1. Escoge tu fruta <span style="font-family: 'NothingPena', 'Caveat Brush', cursive; font-weight: 400; font-size: 24px">(no juzgamos si son las dos)</span></h3>
 <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
 <figure style="margin: 0; text-align: center">
 <div style="background: #FFF7F3; border-radius: 24px; overflow: hidden"><img src="assets/img/fresa.webp" alt="Vaso de fresas" style="width: 100%; height: auto; display: block"></div>
@@ -102,11 +109,11 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <div style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 20px; padding: 14px 8px"><div style="font-family: 'Brice', sans-serif; font-weight: 900; font-size: 26px; color: #A6182E">G</div><div style="font-size: 14px; color: #6E3F47">24 oz</div></div>
 </div>
 <div style="margin-top: 20px; background: #A6182E; color: #FFF7F3; border-radius: 20px; padding: 18px 22px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px">
-<span style="font-family: 'NothingPena', cursive; font-size: 26px">Tu antojo</span>
+<span style="font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 26px">Tu antojo</span>
 <span style="font-family: 'Brice', sans-serif; font-weight: 900; font-size: 36px; text-transform: uppercase">desde $99</span>
 </div>
 <div style="margin-top: 20px; padding-top: 16px; border-top: 1px dashed #E2B9BF">
-<p style="margin: 0 0 8px; font-family: 'NothingPena', cursive; font-size: 26px; color: #A6182E">¿Le subimos al antojo?</p>
+<p style="margin: 0 0 8px; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 26px; color: #A6182E">¿Le subimos al antojo?</p>
 <div style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 15px; font-weight: 600">
 <span style="background: #F6D6DA; color: #7A0F20; padding: 6px 14px; border-radius: 999px">Topping básico extra</span>
 <span style="background: #F6D6DA; color: #7A0F20; padding: 6px 14px; border-radius: 999px">Topping premium</span>
@@ -123,7 +130,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <div style="max-width: 1200px; margin: 0 auto">
 <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 40px">
 <div>
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 32px; color: #A6182E">No es postre, es terapia.</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 32px; color: #A6182E">No es postre, es terapia.</p>
 <h2 style="margin: 4px 0 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 60px; line-height: 1; text-transform: uppercase; color: #A6182E">Las que no fallan</h2>
 </div>
 <p style="margin: 0; max-width: 420px; color: #6E3F47">Diez combinaciones que ya probamos muchas veces (por ciencia). Tú nada más escoge con cuál te vas a consentir hoy. Especialidades desde $149.</p>
@@ -135,7 +142,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <img src="assets/img/clasica.webp" alt="Lady Clásica" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
 <h3 style="margin: 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 26px; text-transform: uppercase; color: #A6182E">Lady Clásica</h3>
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">La original. Nunca pasa de moda.</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">La original. Nunca pasa de moda.</p>
 <p style="margin: 0; color: #5A2A33; font-size: 15px">Crema, fresa y crumble de canela con nuez, coronada con miel maple y vainilla.</p>
 </div>
 </article>
@@ -147,7 +154,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <img src="assets/img/pistachona.webp" alt="La Pistachona" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
 <h3 style="margin: 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 26px; text-transform: uppercase; color: #A6182E">La Pistachona</h3>
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">La más pedida, y lo sabe.</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">La más pedida, y lo sabe.</p>
 <p style="margin: 0; color: #5A2A33; font-size: 15px">Fresas frescas, crema especial, kataifi crujiente con crema de pistache premium y chocolate de nuestra fuente.</p>
 </div>
 </article>
@@ -157,7 +164,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <img src="assets/img/dubai.webp" alt="Lady Dubai" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
 <h3 style="margin: 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 26px; text-transform: uppercase; color: #A6182E">Lady Dubai</h3>
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">La viral. Vale cada peso.</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">La viral. Vale cada peso.</p>
 <p style="margin: 0; color: #5A2A33; font-size: 15px">Fresa fresca, crema de pistache, chocolate de nuestra fuente infinita y kataifi crujiente tostado encima.</p>
 </div>
 </article>
@@ -167,7 +174,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <img src="assets/img/presumida.webp" alt="La Presumida" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
 <h3 style="margin: 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 26px; text-transform: uppercase; color: #A6182E">La Presumida</h3>
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">Ferrero arriba, porque puede.</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">Ferrero arriba, porque puede.</p>
 <p style="margin: 0; color: #5A2A33; font-size: 15px">Capas de crema y fresa con spread artesanal de avellana, crumble de Nutella, coronada con Ferrero y nuez.</p>
 </div>
 </article>
@@ -177,7 +184,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <img src="assets/img/cacao.webp" alt="Cacao Crush" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
 <h3 style="margin: 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 26px; text-transform: uppercase; color: #A6182E">Cacao Crush</h3>
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">Chocolate sin pedir perdón.</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">Chocolate sin pedir perdón.</p>
 <p style="margin: 0; color: #5A2A33; font-size: 15px">Capas de crema y fresa, spread de cacao con nibs, chocolate derretido, crumble de cacao y nuez. Pura tentación.</p>
 </div>
 </article>
@@ -187,7 +194,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <img src="assets/img/japoneza.webp" alt="La Japoneza" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
 <h3 style="margin: 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 26px; text-transform: uppercase; color: #A6182E">La Japoneza</h3>
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">Matcha, Pocky y cero culpa.</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">Matcha, Pocky y cero culpa.</p>
 <p style="margin: 0; color: #5A2A33; font-size: 15px">Spread de matcha, fresas y chocolate derretido, coronada con coco rallado, chispas de chocolate y dos Pocky de matcha.</p>
 </div>
 </article>
@@ -197,7 +204,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <img src="assets/img/lotus.webp" alt="Lady Lotus" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
 <h3 style="margin: 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 26px; text-transform: uppercase; color: #A6182E">Lady Lotus</h3>
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">Caramelo, galleta y peligro.</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">Caramelo, galleta y peligro.</p>
 <p style="margin: 0; color: #5A2A33; font-size: 15px">Fresas con crema especial, caramelo de la fuente infinita, crumble crujiente de Lotus y salsa Lotus irresistible.</p>
 </div>
 </article>
@@ -207,7 +214,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <img src="assets/img/cookie.webp" alt="La Cookie Lover" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
 <h3 style="margin: 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 26px; text-transform: uppercase; color: #A6182E">La Cookie Lover</h3>
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">Oreo + Kit Kat. ¿Qué más quieres?</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">Oreo + Kit Kat. ¿Qué más quieres?</p>
 <p style="margin: 0; color: #5A2A33; font-size: 15px">Fresas, crema, chocolate derretido y Oreo triturado, coronada con Kit Kat y galleta Oreo.</p>
 </div>
 </article>
@@ -217,7 +224,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <img src="assets/img/mexa.webp" alt="La Más Mexa" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
 <h3 style="margin: 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 26px; text-transform: uppercase; color: #A6182E">La Más Mexa</h3>
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">Mazapán, guayaba y orgullo.</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">Mazapán, guayaba y orgullo.</p>
 <p style="margin: 0; color: #5A2A33; font-size: 15px">Fresa y plátano con crema especial, crumble de mazapán, ate de guayaba, lechera y girasol caramelizado. Puro antojo mexa.</p>
 </div>
 </article>
@@ -227,7 +234,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <img src="assets/img/caramelita.webp" alt="La Caramelita" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
 <h3 style="margin: 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 26px; text-transform: uppercase; color: #A6182E">La Caramelita</h3>
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">Dulce, pero con carácter.</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 22px; line-height: 1.2; color: #A6182E">Dulce, pero con carácter.</p>
 <p style="margin: 0; color: #5A2A33; font-size: 15px">Capas de plátano suave, crema especial y caramelo de la fuente, con granola de la casa y galleta Lotus.</p>
 </div>
 </article>
@@ -258,7 +265,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <section style="padding: 0 24px 88px">
 <div style="max-width: 1200px; margin: 0 auto; background: #F6D6DA; border-radius: 40px; padding: 56px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 40px">
 <div style="flex: 1 1 420px; min-width: 0">
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 32px; color: #A6182E">Nuevo · Base Fit</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 32px; color: #A6182E">Nuevo · Base Fit</p>
 <h2 style="margin: 4px 0 16px; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 56px; line-height: 1; text-transform: uppercase; color: #A6182E">El lado más ligero del antojo</h2>
 <p style="margin: 0; font-size: 19px; max-width: 520px">Mismo antojo, con base de yogurt griego y al mismo precio. Para los días en que quieres darte el gusto… y también darte crédito.</p>
 </div>
@@ -271,7 +278,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <!-- SUCURSALES -->
 <section id="sucursales" style="background: #FFFFFF; padding: 88px 24px; border-top: 1px solid #F1D9DC; border-bottom: 1px solid #F1D9DC">
 <div style="max-width: 1200px; margin: 0 auto">
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 32px; color: #A6182E">Ven a vernos</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 32px; color: #A6182E">Ven a vernos</p>
 <h2 style="margin: 4px 0 12px; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 60px; line-height: 1; text-transform: uppercase; color: #A6182E">Encuentra tu Lady</h2>
 <p style="margin: 0 0 40px; color: #6E3F47; max-width: 620px">Abrimos todos los días desde la 1 pm. ¿Antojo nocturno? Viernes a domingo te esperamos hasta las 10.</p>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px">
@@ -359,7 +366,7 @@ Vie a dom · 1:00 – 10:00 pm</p>
 <section id="lovers" style="padding: 0 24px 88px">
 <div style="max-width: 1200px; margin: 0 auto; background: #A6182E; color: #FFF7F3; border-radius: 40px; padding: 56px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 40px">
 <div style="flex: 1 1 460px; min-width: 0">
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 32px; color: #F6D6DA">Programa de lealtad</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 32px; color: #F6D6DA">Programa de lealtad</p>
 <h2 style="margin: 4px 0 16px; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 60px; line-height: 1; text-transform: uppercase">Hazte Lady Lover</h2>
 <p style="margin: 0 0 24px; font-size: 19px; color: #FBE7E9; max-width: 520px">Cada visita es un sello y cada tarjeta llena es un antojo de regalo. Aquí la lealtad sí se premia.</p>
 <a href="https://andresadco.github.io/lady-fresa-pos/registro.html" style="text-decoration: none; background: #FFF7F3; color: #A6182E; font-weight: 600; padding: 14px 26px; border-radius: 999px; min-height: 48px; box-sizing: border-box; display: inline-flex; align-items: center">Quiero ser Lady Lover</a>
@@ -375,7 +382,7 @@ Vie a dom · 1:00 – 10:00 pm</p>
 <div style="max-width: 1200px; margin: 0 auto">
 <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 32px">
 <div>
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 32px; color: #A6182E">#masbuenasquetucrush</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 32px; color: #A6182E">#masbuenasquetucrush</p>
 <h2 style="margin: 4px 0 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 60px; line-height: 1; text-transform: uppercase; color: #A6182E">Ellas ya cayeron</h2>
 </div>
 <p style="margin: 0; font-weight: 700; font-size: 20px">4.8 ★ · más de 800 reseñas en Google</p>
@@ -404,13 +411,13 @@ Vie a dom · 1:00 – 10:00 pm</p>
 <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 56px; align-items: center">
 <div style="flex: 1 1 380px; min-width: 0; display: flex; justify-content: center">
 <div style="width: 100%; max-width: 520px; aspect-ratio: 4 / 3; border-radius: 32px; background: #A6182E; color: #FFF7F3; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 36px; box-sizing: border-box">
-<span style="font-family: 'NothingPena', cursive; font-size: 32px; color: #F6D6DA">No somos Tinder,</span>
+<span style="font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 32px; color: #F6D6DA">No somos Tinder,</span>
 <span style="font-family: 'Brice', sans-serif; font-weight: 900; font-size: 54px; line-height: 0.95; text-transform: uppercase; max-width: 70%">pero aquí hay match.</span>
 <img src="assets/img/mascota-coqueta.png" alt="" aria-hidden="true" style="position: absolute; right: -2%; bottom: -8%; width: 36%; height: auto">
 </div>
 </div>
 <div style="flex: 1 1 460px; min-width: 0">
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 32px; color: #A6182E">Nuestra historia</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 32px; color: #A6182E">Nuestra historia</p>
 <h2 style="margin: 4px 0 20px; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 56px; line-height: 1; text-transform: uppercase; color: #A6182E">Le declaramos la guerra a la culpa</h2>
 <p style="margin: 0 0 16px; font-size: 18px">Lady Fresa nació en la Jardín Balbuena con una idea muy simple: un postre no se pide con permiso. Fresa fresca, nuestra crema especial, chocolate de verdad y toppings que hacemos nosotras.</p>
 <p style="margin: 0; font-size: 18px">Ese primer local se volvió cuatro, y en todos la regla es la misma: que salgas con una sonrisa y sin una pizca de culpa. Porque el gusto no se justifica. Se disfruta.</p>
@@ -421,7 +428,7 @@ Vie a dom · 1:00 – 10:00 pm</p>
 <!-- BUSCAMOS ESPACIOS -->
 <section id="espacios" style="padding: 88px 24px">
 <div style="max-width: 1200px; margin: 0 auto">
-<p style="margin: 0; font-family: 'NothingPena', cursive; font-size: 32px; color: #A6182E">Buscamos casa nueva</p>
+<p style="margin: 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 32px; color: #A6182E">Buscamos casa nueva</p>
 <h2 style="margin: 4px 0 16px; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 60px; line-height: 1; text-transform: uppercase; color: #A6182E">¿Tú pones el lugar? Nosotras ponemos el antojo.</h2>
 <p style="margin: 0 0 40px; font-size: 19px; max-width: 680px">Estamos abriendo nuevas Ladies en la CDMX y el Estado de México. Si eres dueño de un local, administras una plaza o tienes un espacio con buen paso de gente, cuéntanos. Nosotras ponemos la tienda, el equipo y el antojo.</p>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px">
@@ -444,7 +451,7 @@ Vie a dom · 1:00 – 10:00 pm</p>
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px">
 <div style="flex: 1 1 280px; min-width: 0">
 <img src="assets/img/logo-blanco.png" alt="Lady Fresa" style="height: 72px; width: auto; display: block">
-<p style="margin: 12px 0 0; font-family: 'NothingPena', cursive; font-size: 30px; color: #F6D6DA">Date el gusto.</p>
+<p style="margin: 12px 0 0; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 30px; color: #F6D6DA">Date el gusto.</p>
 <p style="margin: 4px 0 0; font-size: 15px; color: #E2B9BF">Hecho con fresa, crema y cero culpa.</p>
 </div>
 <div style="flex: 1 1 220px; min-width: 0; display: flex; flex-direction: column; gap: 8px">
