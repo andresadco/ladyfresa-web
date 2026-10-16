@@ -23,6 +23,17 @@
 @font-face{font-family:'Instrument Serif';src:url(assets/fonts/instrument-italic.ttf) format('truetype');font-style:italic;font-display:swap}
 body{margin:0;background:#FFF7F3}
 a{color:#A6182E}a:hover{color:#7A0F20}
+@keyframes lfFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes lfSway{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+@keyframes lfPop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+@keyframes lfUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.lf-fade{animation:lfUp .7s ease-out both}
+.lf-pop{animation:lfPop .9s cubic-bezier(.2,.8,.2,1) both}
+.lf-float{animation:lfUp .8s .15s ease-out both,lfFloat 5s ease-in-out 1s infinite}
+.lf-sway{transform-origin:50% 95%;animation:lfUp .8s .45s ease-out both,lfSway 3.2s ease-in-out 1.3s infinite}
+.lf-prod img{transition:transform .35s ease}
+.lf-prod:hover img{transform:translateY(-8px) rotate(-2deg)}
+@media (prefers-reduced-motion: reduce){.lf-fade,.lf-pop,.lf-float,.lf-sway{animation:none}.lf-prod:hover img{transform:none}}
 </style>
 <style>html{scroll-behavior:smooth} img{max-width:100%} @media (max-width:640px){h1{font-size:64px!important} h2{font-size:42px!important} section>div[style*="border-radius: 40px"]{padding:32px 22px!important}}</style>
 </head>
@@ -50,7 +61,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <!-- HERO -->
 <section id="inicio" style="padding: 64px 24px 88px; overflow: hidden">
 <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 48px">
-<div style="flex: 1 1 460px; min-width: 0">
+<div class="lf-fade" style="flex: 1 1 460px; min-width: 0">
 <p style="margin: 0 0 8px; font-family: 'NothingPena', cursive; font-size: 34px; color: #A6182E">Hoy no se cuentan calorías.</p>
 <h1 style="margin: 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 104px; line-height: 0.95; text-transform: uppercase; color: #A6182E">Date el gusto.</h1>
 <p style="margin: 28px 0 0; font-size: 20px; max-width: 520px">Fresa fresca, nuestra crema especial y chocolate que no deja de caer. Aquí no se pide perdón, se pide doble topping.</p>
@@ -61,10 +72,10 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <p style="margin: 28px 0 0; font-size: 15px; color: #6E3F47">4.8 ★ con más de 800 reseñas en Google · 4 sucursales en CDMX · Abiertas todos los días desde la 1 pm</p>
 </div>
 <div style="flex: 1 1 420px; min-width: 0; position: relative; display: flex; justify-content: center">
-<div style="width: 100%; max-width: 620px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px">
-<img src="assets/img/presumida.webp" alt="La Presumida" style="width: 42%; height: auto; display: block; margin-right: -12%; margin-bottom: 6%; filter: drop-shadow(0 18px 24px rgba(122, 15, 32, 0.12))">
-<img src="assets/img/pistachona.webp" alt="La Pistachona: vaso de fresas con crema, pistache y kataifi" style="width: 60%; height: auto; display: block; position: relative; z-index: 1; filter: drop-shadow(0 24px 32px rgba(122, 15, 32, 0.18))">
-<img src="assets/img/dubai.webp" alt="Lady Dubai" style="width: 42%; height: auto; display: block; margin-left: -12%; margin-bottom: 6%; filter: drop-shadow(0 18px 24px rgba(122, 15, 32, 0.12))">
+<div style="width: 100%; max-width: 520px; aspect-ratio: 1 / 1.08; position: relative">
+<div class="lf-pop" style="position: absolute; left: 6%; right: 6%; bottom: 0; aspect-ratio: 1 / 1; border-radius: 50%; background: #F6D6DA"></div>
+<img class="lf-float" src="assets/img/pistachona.webp" alt="La Pistachona: vaso de fresas con crema, pistache y kataifi" style="position: absolute; left: 4%; width: 92%; bottom: 3%; height: auto; display: block; filter: drop-shadow(0 26px 34px rgba(122, 15, 32, 0.22))">
+<img class="lf-sway" src="assets/img/mascota-hola.png" alt="" aria-hidden="true" style="position: absolute; left: -6%; bottom: -4%; width: 34%; height: auto; display: block; z-index: 2">
 </div>
 </div>
 </div>
@@ -150,7 +161,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px">
 
-<article style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
+<article class="lf-prod" style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
 
 <img src="assets/img/clasica.webp" alt="Lady Clásica" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
@@ -163,7 +174,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 </div>
 </article>
 
-<article style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
+<article class="lf-prod" style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
 
 <span style="position: absolute; top: 14px; left: 14px; background: #A6182E; color: #FFFFFF; font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 999px">Top de la casa</span>
 
@@ -178,7 +189,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 </div>
 </article>
 
-<article style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
+<article class="lf-prod" style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
 
 <img src="assets/img/dubai.webp" alt="Lady Dubai" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
@@ -191,7 +202,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 </div>
 </article>
 
-<article style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
+<article class="lf-prod" style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
 
 <img src="assets/img/presumida.webp" alt="La Presumida" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
@@ -204,7 +215,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 </div>
 </article>
 
-<article style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
+<article class="lf-prod" style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
 
 <img src="assets/img/cacao.webp" alt="Cacao Crush" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
@@ -217,7 +228,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 </div>
 </article>
 
-<article style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
+<article class="lf-prod" style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
 
 <img src="assets/img/japoneza.webp" alt="La Japoneza" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
@@ -230,7 +241,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 </div>
 </article>
 
-<article style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
+<article class="lf-prod" style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
 
 <img src="assets/img/lotus.webp" alt="Lady Lotus" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
@@ -243,7 +254,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 </div>
 </article>
 
-<article style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
+<article class="lf-prod" style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
 
 <img src="assets/img/cookie.webp" alt="La Cookie Lover" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
@@ -256,7 +267,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 </div>
 </article>
 
-<article style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
+<article class="lf-prod" style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
 
 <img src="assets/img/mexa.webp" alt="La Más Mexa" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
@@ -269,7 +280,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 </div>
 </article>
 
-<article style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
+<article class="lf-prod" style="background: #FFFFFF; border: 1px solid #F1D9DC; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; position: relative">
 
 <img src="assets/img/caramelita.webp" alt="La Caramelita" style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; display: block; background: #FFF7F3; padding: 20px 20px 4px; box-sizing: border-box">
 <div style="padding: 4px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1">
