@@ -23,17 +23,6 @@
 @font-face{font-family:'Instrument Serif';src:url(assets/fonts/instrument-italic.ttf) format('truetype');font-style:italic;font-display:swap}
 body{margin:0;background:#FFF7F3}
 a{color:#A6182E}a:hover{color:#7A0F20}
-@keyframes lfFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
-@keyframes lfSway{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
-@keyframes lfPop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
-@keyframes lfUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-.lf-fade{animation:lfUp .7s ease-out both}
-.lf-pop{animation:lfPop .9s cubic-bezier(.2,.8,.2,1) both}
-.lf-float{animation:lfUp .8s .15s ease-out both,lfFloat 5s ease-in-out 1s infinite}
-.lf-sway{transform-origin:50% 95%;animation:lfUp .8s .45s ease-out both,lfSway 3.2s ease-in-out 1.3s infinite}
-.lf-prod img{transition:transform .35s ease}
-.lf-prod:hover img{transform:translateY(-8px) rotate(-2deg)}
-@media (prefers-reduced-motion: reduce){.lf-fade,.lf-pop,.lf-float,.lf-sway{animation:none}.lf-prod:hover img{transform:none}}
 </style>
 <style>html{scroll-behavior:smooth} img{max-width:100%} @media (max-width:640px){h1{font-size:64px!important} h2{font-size:42px!important} section>div[style*="border-radius: 40px"]{padding:32px 22px!important}}</style>
 </head>
@@ -73,7 +62,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 </div>
 <div style="flex: 1 1 420px; min-width: 0; position: relative; display: flex; justify-content: center">
 <div style="width: 100%; max-width: 560px; aspect-ratio: 1 / 1; position: relative">
-<div class="lf-pop" style="position: absolute; inset: 0; border-radius: 50%; background: #FFFFFF; border: 10px solid #F6D6DA; box-sizing: border-box"></div>
+<div class="lf-pop" style="position: absolute; inset: 0; border-radius: 50%; background: #FFFFFF; border: 8px solid #A6182E; box-sizing: border-box"></div>
 <img class="lf-float" src="assets/img/pistachona.webp" alt="La Pistachona: vaso de fresas con crema, pistache y kataifi" style="position: absolute; left: 9%; top: 7%; width: 82%; height: auto; display: block">
 <img class="lf-sway" src="assets/img/mascota-hola.png" alt="" aria-hidden="true" style="position: absolute; left: -6%; bottom: -4%; width: 34%; height: auto; display: block; z-index: 2">
 </div>
