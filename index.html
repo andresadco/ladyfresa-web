@@ -31,6 +31,58 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 </style>
 <style>.lf-burger{display:none;align-items:center;justify-content:center;width:48px;height:48px;border:2px solid #A6182E;border-radius:999px;background:transparent;color:#A6182E;cursor:pointer;padding:0} @media (max-width:760px){header nav{display:none!important;width:100%;flex-direction:column;align-items:flex-start!important;gap:6px!important;padding:8px 0 6px} header nav a{min-height:44px;display:inline-flex;align-items:center;font-size:18px} header nav.lf-open{display:flex!important} .lf-burger{display:inline-flex}}</style>
 <style>html{scroll-behavior:smooth} img{max-width:100%} @media (max-width:640px){h1{font-size:64px!important} h2{font-size:42px!important} section>div[style*="border-radius: 40px"]{padding:32px 22px!important}}</style>
+<style>
+/* ===== Pulido de interacción (micro-transiciones) ===== */
+:root{--lf-out:cubic-bezier(0.23,1,0.32,1)}
+
+/* Links: el cambio de color ya no brinca */
+a{transition:color 150ms ease,opacity 150ms ease}
+
+/* Botones píldora y hamburguesa: feedback al presionar */
+a[style*="border-radius: 999px"],.lf-burger{transition:transform 160ms var(--lf-out),color 150ms ease,background-color 150ms ease,opacity 150ms ease}
+a[style*="border-radius: 999px"]:active,.lf-burger:active{transform:scale(0.97)}
+
+/* Logo del nav es un link, que se sienta como tal */
+header a[aria-label]{transition:transform 160ms var(--lf-out),opacity 150ms ease}
+header a[aria-label]:active{transform:scale(0.98)}
+
+/* Hover solo donde hay mouse de verdad (en touch el hover se queda pegado) */
+@media (hover:hover) and (pointer:fine){
+  header a[aria-label]:hover{opacity:.85}
+  a[style*="border-radius: 999px"]:hover{opacity:.92}
+  .lf-prod{transition:transform 200ms var(--lf-out),box-shadow 200ms var(--lf-out)}
+  .lf-prod:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(58,16,24,.08)}
+}
+
+/* Menú móvil: entra con ease-out en vez de aparecer de golpe */
+@media (max-width:760px){
+  header nav.lf-open{opacity:1;transform:translateY(0);transition:opacity 200ms var(--lf-out),transform 200ms var(--lf-out)}
+  @starting-style{header nav.lf-open{opacity:0;transform:translateY(-6px)}}
+}
+
+/* Hamburguesa → X: indica el estado sin leer el aria-label */
+.lf-burger path{transition:transform 200ms var(--lf-out),opacity 150ms ease;transform-origin:12px 12px}
+.lf-burger.lf-x .lf-l1{transform:translateY(5px) rotate(45deg)}
+.lf-burger.lf-x .lf-l2{opacity:0}
+.lf-burger.lf-x .lf-l3{transform:translateY(-5px) rotate(-45deg)}
+
+/* Hero: entrada escalonada, una sola vez (aquí sí cabe un poco de delicia) */
+@keyframes lf-in{to{opacity:1;transform:translateY(0)}}
+#inicio .lf-stagger>*{opacity:0;transform:translateY(8px);animation:lf-in 420ms var(--lf-out) forwards}
+#inicio .lf-stagger>:nth-child(1){animation-delay:40ms}
+#inicio .lf-stagger>:nth-child(2){animation-delay:90ms}
+#inicio .lf-stagger>:nth-child(3){animation-delay:140ms}
+#inicio .lf-stagger>:nth-child(4){animation-delay:190ms}
+#inicio .lf-stagger>:nth-child(5){animation-delay:240ms}
+
+/* Reducir movimiento ≠ apagar todo: se queda color/opacidad, se va lo que se mueve */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  a[style*="border-radius: 999px"]:active,.lf-burger:active,header a[aria-label]:active,.lf-prod:hover{transform:none}
+  #inicio .lf-stagger>*{transform:none;animation:lf-in 200ms ease forwards}
+  .lf-burger path{transition:opacity 150ms ease}
+}
+</style>
 </head>
 <body>
 
@@ -42,8 +94,8 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <a href="#inicio" aria-label="Lady Fresa, inicio" style="display: flex; align-items: center">
 <img src="assets/img/logo-vino.png" alt="Lady Fresa" style="height: 56px; width: auto; display: block">
 </a>
-<button class="lf-burger" type="button" aria-label="Abrir menú" aria-expanded="false" onclick="var n=document.querySelector('header nav');var o=n.classList.toggle('lf-open');this.setAttribute('aria-expanded',o);this.setAttribute('aria-label',o?'Cerrar menú':'Abrir menú')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-<nav aria-label="Principal" onclick="if(event.target.tagName==='A'&&innerWidth<=760){this.classList.remove('lf-open')}" style="display: flex; flex-wrap: wrap; align-items: center; gap: 24px; font-weight: 600; font-size: 16px">
+<button class="lf-burger" type="button" aria-label="Abrir menú" aria-expanded="false" onclick="var n=document.querySelector('header nav');var o=n.classList.toggle('lf-open');this.classList.toggle('lf-x',o);this.setAttribute('aria-expanded',o);this.setAttribute('aria-label',o?'Cerrar menú':'Abrir menú')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path class="lf-l1" d="M4 7h16"/><path class="lf-l2" d="M4 12h16"/><path class="lf-l3" d="M4 17h16"/></svg></button>
+<nav aria-label="Principal" onclick="if(event.target.tagName==='A'&&innerWidth<=760){this.classList.remove('lf-open');var b=document.querySelector('.lf-burger');b.classList.remove('lf-x');b.setAttribute('aria-expanded','false');b.setAttribute('aria-label','Abrir menú')}" style="display: flex; flex-wrap: wrap; align-items: center; gap: 24px; font-weight: 600; font-size: 16px">
 <a href="#menu" style="text-decoration: none">Menú</a>
 <a href="#sucursales" style="text-decoration: none">Sucursales</a>
 <a href="#lovers" style="text-decoration: none">Lady Lovers</a>
@@ -57,7 +109,7 @@ a{color:#A6182E}a:hover{color:#7A0F20}
 <!-- HERO -->
 <section id="inicio" style="padding: 64px 24px 88px; overflow: hidden; background: #A6182E; color: #FFF7F3">
 <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 48px">
-<div style="flex: 1 1 460px; min-width: 0">
+<div class="lf-stagger" style="flex: 1 1 460px; min-width: 0">
 <p style="margin: 0 0 8px; font-family: 'NothingPena', 'Caveat Brush', cursive; font-size: 34px; color: #F6D6DA">Hoy no se cuentan calorías.</p>
 <h1 style="margin: 0; font-family: 'Brice', sans-serif; font-weight: 900; font-size: 104px; line-height: 0.95; text-transform: uppercase; color: #FFF7F3">Date el gusto.</h1>
 <p style="margin: 28px 0 0; font-size: 20px; max-width: 520px">Fresa fresca, nuestra crema especial y chocolate que no deja de caer. Aquí no se pide perdón, se pide doble topping.</p>
@@ -337,7 +389,7 @@ Vie a dom · 1:00 – 10:00 pm</p>
 <p style="margin: 0; font-size: 15px; color: #5A2A33; white-space: pre-line">Horario por confirmar</p>
 <p style="margin: 0; font-size: 15px; color: #5A2A33">Te avisamos la fecha de apertura en Instagram</p>
 <div style="margin-top: auto; display: flex; flex-wrap: wrap; gap: 16px">
-<a href="https://www.instagram.com/ladyfresamx" style="font-weight: 600; min-height: 44px; display: inline-flex; align-items: center">Cómo llegar →</a>
+<a href="https://www.instagram.com/ladyfresamx" style="font-weight: 600; min-height: 44px; display: inline-flex; align-items: center">Síguenos para la fecha →</a>
 
 </div>
 </article>
@@ -469,7 +521,7 @@ Vie a dom · 1:00 – 10:00 pm</p>
 <strong style="color: #FFF7F3">Legal</strong>
 <a href="https://app.ladyfresa.com/aviso-privacidad.html" style="color: #FBE7E9">Aviso de privacidad</a>
 <a href="#contacto" style="color: #FBE7E9">Términos de Lady Lovers</a>
-<a href="#contacto" style="color: #FBE7E9">Facturación</a>
+<a href="factura/" style="color: #FBE7E9">Facturación</a>
 </div>
 </div>
 <p style="margin: 48px 0 0; padding-top: 24px; border-top: 1px solid #5C2630; font-size: 14px; color: #E2B9BF">© 2026 Lady Fresa · Ciudad de México</p>
