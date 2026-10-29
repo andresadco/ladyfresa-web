@@ -61,7 +61,7 @@ header a[aria-label]:active{transform:scale(0.98)}
 }
 
 /* Hamburguesa → X: indica el estado sin leer el aria-label */
-.lf-burger path{transition:transform 200ms var(--lf-out),opacity 150ms ease;transform-origin:12px 12px}
+.lf-burger path{transition:transform 200ms var(--lf-out),opacity 150ms ease;transform-box:fill-box;transform-origin:center}
 .lf-burger.lf-x .lf-l1{transform:translateY(5px) rotate(45deg)}
 .lf-burger.lf-x .lf-l2{opacity:0}
 .lf-burger.lf-x .lf-l3{transform:translateY(-5px) rotate(-45deg)}
