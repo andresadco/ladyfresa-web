@@ -50,12 +50,13 @@ h1{font-family:'Brice',sans-serif;font-weight:900;color:var(--vino);text-transfo
 @keyframes sdrop{from{opacity:0;transform:translateY(-40px) scale(1.2)}to{opacity:1;transform:none}}
 [hidden]{display:none!important}
 .recipe{position:relative;width:100%;max-width:440px;margin:4px auto 0;aspect-ratio:1/1.02}
+.rcup .sidebox{max-width:none;margin:0}.rcup #side{transform:none!important}
 .rcup{position:absolute;left:50%;top:50%;width:44%;transform:translate(-50%,-50%);transition:width .45s cubic-bezier(.3,1.4,.5,1)}
 .rcup img{width:100%;display:block;filter:drop-shadow(0 10px 14px rgba(90,42,51,.22));opacity:0;transition:opacity .4s}
 .rcup img.on{opacity:1}
 .rcup img.ghost{opacity:.22;filter:grayscale(1) drop-shadow(0 10px 14px rgba(90,42,51,.12))}
-.rhint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'NothingPena','Caveat Brush',cursive;color:var(--vino);font-size:clamp(18px,5vw,24px);text-align:center}
-.rb{position:absolute;width:21%;transform:translate(-50%,-50%);text-align:center;animation:rpop .5s cubic-bezier(.3,1.6,.5,1) both}
+.rhint{position:absolute;inset:-14% -40% auto -40%;height:14%;display:flex;align-items:center;justify-content:center;font-family:'NothingPena','Caveat Brush',cursive;color:var(--vino);font-size:clamp(18px,5vw,24px);text-align:center}
+.rb{position:absolute;z-index:3;width:21%;transform:translate(-50%,-50%);text-align:center;animation:rpop .5s cubic-bezier(.3,1.6,.5,1) both}
 .rb .ri{position:relative;width:72%;margin:0 auto;aspect-ratio:1;border-radius:50%;overflow:hidden;background:#fff;border:3px solid #fff;box-shadow:0 4px 10px -2px rgba(90,42,51,.3)}
 .rb .ri img{width:100%;height:100%;object-fit:cover;display:block}
 .rb .rn{font-size:clamp(9.5px,2.6vw,12px);font-weight:700;color:var(--texto);line-height:1.1;margin-top:3px}
@@ -152,10 +153,8 @@ h1{font-family:'Brice',sans-serif;font-weight:900;color:var(--vino);text-transfo
     <div class="chip-tot" id="chipTot">Vaso mediano · 16 oz</div>
     <div class="viewtog" role="tablist" hidden><button id="vSide" class="on">De lado</button><button id="vTop">Desde arriba</button></div>
     <div class="recipe" id="recipe">
-      <div class="rcup" id="rcup"><img id="rcupImg" alt=""><div class="rhint" id="rhint">elige tu fruta</div></div>
-      <div id="rbadges"></div>
-    </div>
-    <div class="sidebox" id="sidebox" hidden>
+      <div class="rcup" id="rcup"><img id="rcupImg" alt="" hidden>
+    <div class="sidebox" id="sidebox">
       <svg id="side" viewBox="0 0 100 135" aria-hidden="true">
         <defs>
           <clipPath id="cIn"><path d="M11.5 46 L88.5 46 L80.5 124 Q80 130 74 130 L26 130 Q20 130 19.5 124 Z"/></clipPath>
@@ -185,6 +184,10 @@ h1{font-family:'Brice',sans-serif;font-weight:900;color:var(--vino);text-transfo
         <path d="M10.5 46.6 L89.5 46.6" stroke="#DCCDD0" stroke-width=".35"/></g>
       </svg>
     </div>
+<div class="rhint" id="rhint">elige tu fruta</div></div>
+      <div id="rbadges"></div>
+    </div>
+
     <div class="cupbox" id="topbox" hidden>
       <div class="bowl" id="cup">
         <div class="inner" id="inner">
@@ -402,7 +405,7 @@ function drawSide(anim){
   const sz=SIZES.find(z=>z.id===S.size);$('side').style.transform=`scale(${sz.s})`;
   $('crImg').setAttribute('href',AS.crema);$('sLogo').setAttribute('href',LOGO);
   const base=S.base,sb=$('sBase');sb.innerHTML='';
-  const photo=!!(S.fruit&&S.base),ph=$('sPhoto');
+  const photo=false,ph=$('sPhoto');
   ['sGlass','sEmpty','sVeil'].forEach(id=>$(id).style.display=photo?'none':'');
   if(photo){const fk={fresa:'fresas',platano:'platanos',combinado:'combinado'}[S.fruit];const k=(base==='bchoc'||base==='bcara')?fk+'_'+base:fk;
     if(ph.getAttribute('href')!==AS.cup[k]){ph.setAttribute('href',AS.cup[k]);if(anim==='fruit'||anim==='base'){ph.classList.remove('fadeIn');void ph.getBBox();ph.classList.add('fadeIn')}}ph.style.display='';}
@@ -445,7 +448,7 @@ function drawSide(anim){
   });
 }
 function draw(anim){
-  drawRecipe(anim);
+  drawSide(anim);drawRecipe(anim);
   const sz=SIZES.find(z=>z.id===S.size);$('cup').style.transform=`scale(${sz.s})`;
   $('chipTot').innerHTML=`Vaso ${sz.lbl} · ${sz.oz} oz · <b>${money(calc().total)}</b>`;
   $('empty').textContent=(!S.fruit&&!S.base)?'tu vaso te espera…':'';
@@ -486,10 +489,9 @@ function draw(anim){
 
 let rPrevKeys=[];
 function drawRecipe(anim){
-  const sz=SIZES.find(z=>z.id===S.size);const nItems=(S.base?1:0)+S.tops.length+S.shots.length;$('rcup').style.width=(({ch:38,m:44,g:50})[S.size]-(nItems>6?6:0))+'%';$('rcup').style.top='54%';
+  const sz=SIZES.find(z=>z.id===S.size);const nItems=(S.base?1:0)+S.tops.length+S.shots.length;$('rcup').style.width=(({ch:40,m:46,g:52})[S.size]-(nItems>6?5:0))+'%';$('rcup').style.top='50%';
   const im=$('rcupImg'),fk=S.fruit?{fresa:'fresas',platano:'platanos',combinado:'combinado'}[S.fruit]:'fresas';
-  const src=AS.full[fk];if(im.getAttribute('src')!==src){im.classList.remove('on');im.onload=()=>im.classList.add('on');im.src=src}else im.classList.add('on');
-  im.classList.toggle('ghost',!S.fruit);$('rhint').style.display=S.fruit?'none':'flex';
+  $('rhint').style.display=S.fruit?'none':'flex';
   // items
   const items=[];const f=freeIds();
   if(S.base){const b=BASES.find(x=>x.id===S.base);items.push({k:'b'+S.base,img:PH[S.base]||PH.crema,n:b.n,p:PRICE.base[S.base]})}
@@ -500,7 +502,7 @@ function drawRecipe(anim){
   const cupR=({ch:.5,m:.56,g:.62})[S.size];
   items.forEach((it,i)=>{
     const t=n<=1?0:i/(n);const a=-Math.PI*0.78+t*Math.PI*1.95;
-    const rx=40+(n>8?3:0),ry=38;
+    const rx=41+(n>8?2:0),ry=39;
     const x=50+Math.cos(a)*rx,y=Math.max(17,52+Math.sin(a)*ry);
     const d=document.createElement('div');d.className='rb float';d.style.left=x+'%';d.style.top=y+'%';
     if(rPrevKeys.includes(it.k)&&anim!=='all')d.style.animation='none';
