@@ -417,8 +417,7 @@ function drawSide(anim){
   else ph.style.display='none';
   const sdefs=$('side').querySelector('defs');
   const full=base==='bchoc'||base==='bcara';
-  if(base&&!photo){if(full){const g=sauceGrad(sdefs,'sgFull',SAUCE[base]);sdefs.lastChild.classList.add('sg');el('rect',{x:0,y:40,width:100,height:95,fill:g},sb);
-      for(let k=0;k<6;k++)el('path',{d:`M${14+k*14} 48 Q${17+k*14} 80 ${13+k*14} 128`,stroke:'#fff','stroke-opacity':.12,'stroke-width':1.2,fill:'none'},sb)}
+  if(base&&!photo){if(full){const g=sauceGrad(sdefs,'sgFull',SAUCE[base]);sdefs.lastChild.classList.add('sg');el('rect',{x:0,y:40,width:100,height:95,fill:g},sb);}
     else{el('rect',{x:0,y:40,width:100,height:95,fill:'url(#crPat)'},sb);if(base==='fit')el('rect',{x:0,y:40,width:100,height:95,fill:'#F4F7FA',style:'mix-blend-mode:multiply'},sb)}}
   // fruit bands visible through the cup
   const sf=$('sFruit');
@@ -427,8 +426,7 @@ function drawSide(anim){
       const bands=base?[[117,9],[91,8],[66,8]]:[[119,7],[107,7],[95,7],[83,7],[71,7],[59,7]];let k=0;
       if(!base){for(let i=0;i<150;i++){const yy=126-Math.pow(r(),1.15)*76,x=15+r()*70;img(sf,srcs[Math.floor(r()*srcs.length)],x,yy,9.5+r()*4.5,Math.round(r()*360),anim==='fruit'?'drop':null,Math.round((126-yy)*8))}}
       else bands.forEach(([y,th])=>{const n=base?40:44;for(let i=0;i<n;i++){const yy=y+(r()*2-1)*th,half=37-(130-yy)*0;const x=16+r()*68;img(sf,srcs[Math.floor(r()*srcs.length)],x,yy,10+r()*4.5,Math.round(r()*360),anim==='fruit'?'drop':null,(k++)*12)}});
-      if(full){const c=SAUCE[base];el('rect',{x:0,y:40,width:100,height:95,fill:c[1],opacity:.22,style:'mix-blend-mode:multiply'},sf);
-        for(let k=0;k<5;k++){const x=16+k*17+r()*4;el('path',{d:`M${x} 46 C${x+3} 70 ${x-3} 95 ${x+2} 128`,stroke:c[1],'stroke-width':3+r()*3,'stroke-opacity':.55,fill:'none','stroke-linecap':'round'},sf)}}
+      if(full){const c=SAUCE[base];el('rect',{x:0,y:40,width:100,height:95,fill:c[1],opacity:.22,style:'mix-blend-mode:multiply'},sf);}
       if(base&&!full){bands.forEach(([y])=>{[-11,11].forEach(o=>el('ellipse',{cx:30+r()*40,cy:y+o,rx:40,ry:2.5+r()*1.5,fill:'#FBF6EE',opacity:.45,filter:'url(#blurS)'},sf))})}
       if(base==='choco'||base==='caramel'){const g=sauceGrad(sdefs,'sgLay',SAUCE[base]);sdefs.lastChild.classList.add('sg');const gl=el('g',{filter:'url(#shD)',class:anim==='base'?'pourIn':''},sf);[[101,6.5],[75,6],[51,5]].forEach(([y,h])=>sauceLayer(gl,y,h,g,r))}
     }}
