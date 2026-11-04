@@ -401,6 +401,11 @@ function domeYs(x,h){const t=(x-50)/39;return 45.5-Math.max(0,1-t*t)**0.75*h}
 function img(parent,src,x,y,w,rot,cls,delay){const e=el('image',{href:src,x:(x-w/2).toFixed(2),y:(y-w/2).toFixed(2),width:w.toFixed(2),height:w.toFixed(2),transform:`rotate(${rot} ${x.toFixed(2)} ${y.toFixed(2)})`,preserveAspectRatio:'xMidYMid meet'},parent);if(cls){e.classList.add(cls);e.style.animationDelay=(delay||0)+'ms'}return e}
 function shade(h,p){const n=parseInt(h.slice(1),16);let R=n>>16,G=n>>8&255,B=n&255;const f=c=>Math.round(p>0?c+(255-c)*p:c*(1+p));return '#'+[f(R),f(G),f(B)].map(v=>v.toString(16).padStart(2,'0')).join('')}
 function fruitSrcs(){return S.fruit==='fresa'?AS.frp.fresa:S.fruit==='platano'?AS.frp.platano:AS.frp.fresa.concat(AS.frp.platano,AS.frp.platano)}
+const SAUCE={choco:['#7A4026','#4A2317','#2A120B'],caramel:['#E7A65A','#C27A2C','#8A4E16'],bchoc:['#7A4026','#4A2317','#2A120B'],bcara:['#E7A65A','#C27A2C','#8A4E16']};
+function sauceGrad(defs,id,c){const old=document.getElementById(id);if(old)old.remove();const g=el('linearGradient',{id,x1:0,y1:0,x2:0,y2:1},defs);el('stop',{offset:0,'stop-color':c[0]},g);el('stop',{offset:.45,'stop-color':c[1]},g);el('stop',{offset:1,'stop-color':c[2]},g);return `url(#${id})`}
+function sauceLayer(p,y,h,fill,r){let top=`M8 ${y}`,bot='';for(let x=8;x<=92;x+=4){top+=` L${x} ${(y+Math.sin(x*.21+r()*2)*1.1).toFixed(2)}`}
+  for(let x=92;x>=8;x-=4){bot+=` L${x} ${(y+h+Math.sin(x*.17+r()*2)*1.3).toFixed(2)}`}
+  el('path',{d:top+bot+' Z',fill},p);let hl=`M10 ${y+.8}`;for(let x=10;x<=90;x+=4)hl+=` L${x} ${(y+.8+Math.sin(x*.21)*1).toFixed(2)}`;el('path',{d:hl,fill:'none',stroke:'#fff','stroke-opacity':.35,'stroke-width':.5},p)}
 function drawSide(anim){
   const sz=SIZES.find(z=>z.id===S.size);$('side').style.transform=`scale(${sz.s})`;
   $('crImg').setAttribute('href',AS.crema);$('sLogo').setAttribute('href',LOGO);
@@ -410,7 +415,11 @@ function drawSide(anim){
   if(photo){const fk={fresa:'fresas',platano:'platanos',combinado:'combinado'}[S.fruit];const k=(base==='bchoc'||base==='bcara')?fk+'_'+base:fk;
     if(ph.getAttribute('href')!==AS.cup[k]){ph.setAttribute('href',AS.cup[k]);if(anim==='fruit'||anim==='base'){ph.classList.remove('fadeIn');void ph.getBBox();ph.classList.add('fadeIn')}}ph.style.display='';}
   else ph.style.display='none';
-  if(base&&!photo){el('rect',{x:0,y:40,width:100,height:95,fill:'url(#crPat)'},sb);if(TINT[base])el('rect',{x:0,y:40,width:100,height:95,fill:TINT[base],style:'mix-blend-mode:multiply'},sb)}
+  const sdefs=$('side').querySelector('defs');
+  const full=base==='bchoc'||base==='bcara';
+  if(base&&!photo){if(full){const g=sauceGrad(sdefs,'sgFull',SAUCE[base]);sdefs.lastChild.classList.add('sg');el('rect',{x:0,y:40,width:100,height:95,fill:g},sb);
+      for(let k=0;k<6;k++)el('path',{d:`M${14+k*14} 48 Q${17+k*14} 80 ${13+k*14} 128`,stroke:'#fff','stroke-opacity':.12,'stroke-width':1.2,fill:'none'},sb)}
+    else{el('rect',{x:0,y:40,width:100,height:95,fill:'url(#crPat)'},sb);if(base==='fit')el('rect',{x:0,y:40,width:100,height:95,fill:'#F4F7FA',style:'mix-blend-mode:multiply'},sb)}}
   // fruit bands visible through the cup
   const sf=$('sFruit');
   if(anim!=='top'&&anim!=='shot'&&anim!=='keep'&&anim!=='sp'){sf.innerHTML='';
@@ -418,12 +427,13 @@ function drawSide(anim){
       const bands=base?[[117,9],[91,8],[66,8]]:[[119,7],[107,7],[95,7],[83,7],[71,7],[59,7]];let k=0;
       if(!base){for(let i=0;i<150;i++){const yy=126-Math.pow(r(),1.15)*76,x=15+r()*70;img(sf,srcs[Math.floor(r()*srcs.length)],x,yy,9.5+r()*4.5,Math.round(r()*360),anim==='fruit'?'drop':null,Math.round((126-yy)*8))}}
       else bands.forEach(([y,th])=>{const n=base?40:44;for(let i=0;i<n;i++){const yy=y+(r()*2-1)*th,half=37-(130-yy)*0;const x=16+r()*68;img(sf,srcs[Math.floor(r()*srcs.length)],x,yy,10+r()*4.5,Math.round(r()*360),anim==='fruit'?'drop':null,(k++)*12)}});
-      if(base){const c=TINT[base]||'#FBF6EE';bands.forEach(([y])=>{[-11,11].forEach(o=>el('ellipse',{cx:30+r()*40,cy:y+o,rx:40,ry:2.5+r()*1.5,fill:'#FBF6EE',opacity:.45,filter:'url(#blurS)'},sf))})}
+      if(base&&!full){bands.forEach(([y])=>{[-11,11].forEach(o=>el('ellipse',{cx:30+r()*40,cy:y+o,rx:40,ry:2.5+r()*1.5,fill:'#FBF6EE',opacity:.45,filter:'url(#blurS)'},sf))})}
+      if(base==='choco'||base==='caramel'){const g=sauceGrad(sdefs,'sgLay',SAUCE[base]);sdefs.lastChild.classList.add('sg');const gl=el('g',{filter:'url(#shD)',class:anim==='base'?'pourIn':''},sf);[[101,6.5],[75,6],[51,5]].forEach(([y,h])=>sauceLayer(gl,y,h,g,r))}
     }}
   // dome
   const lvl=Math.min(S.tops.length,5),H=(base||S.fruit)?7+lvl*3.2:0,sd=$('sDome');sd.innerHTML='';
   if(H){let d='M10.5 45.5';for(let x=10.5;x<=89.5;x+=2)d+=` L${x.toFixed(1)} ${domeYs(x,H).toFixed(2)}`;d+=' L89.5 46 Z';
-    if(base||photo){el('path',{d,fill:'url(#crPat)'},sd);if(TINT[base])el('path',{d,fill:TINT[base],style:'mix-blend-mode:multiply'},sd);el('path',{d,fill:'url(#domeSh)'},sd);el('path',{d:d.replace(/ L89.5 46 Z$/,''),fill:'none',stroke:'#E3D5C8','stroke-width':.45},sd)}
+    if(base||photo){if(base==='bchoc'||base==='bcara'){el('path',{d,fill:sauceGrad($('side').querySelector('defs'),'sgDome',SAUCE[base])},sd);$('sgDome').classList.add('sg')}else el('path',{d,fill:'url(#crPat)'},sd);el('path',{d,fill:'url(#domeSh)'},sd);el('path',{d:d.replace(/ L89.5 46 Z$/,''),fill:'none',stroke:'#E3D5C8','stroke-width':.45},sd)}
     if(S.fruit){const r=rng('df'+S.fruit),srcs=fruitSrcs();
       for(let i=0;i<(base?10:22);i++){const x=14+r()*72,yt=domeYs(x,H),y=yt+1.5+r()*Math.max(1,(45.5-yt)*.8);img(sd,srcs[Math.floor(r()*srcs.length)],x,y,7+r()*4,Math.round(r()*360),anim==='fruit'?'drop':null,i*30)}}
   }
@@ -434,7 +444,6 @@ function drawSide(anim){
   // drizzles + drips
   const sz2=$('sDrz'),dp=$('sDrip');sz2.innerHTML='';dp.innerHTML='';
   const drz=S.tops.filter(id=>AS.tops[id].col).map(id=>({id,col:AS.tops[id].col,mode:id==='lechera'?'top':S.sp,isNew:(anim==='top'&&id===S.tops[S.tops.length-1])||anim==='sp'}));
-  if(S.base==='choco'||S.base==='caramel'){const id=S.base==='choco'?'choc':'cara';drz.unshift({id,col:AS.tops[id].col,mode:'wall',isNew:anim==='base'})}
   S.shots.forEach(sh=>drz.push({id:sh,col:AS.tops[sh].col,mode:'both',isNew:anim==='shot'&&sh===S.shots[S.shots.length-1]}));
   let wi=0;
   drz.forEach((d,i)=>{const r=rng(d.id+'sd'+i),isN=d.isNew,SA=AS.sauce[d.id];
