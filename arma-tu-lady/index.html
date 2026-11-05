@@ -399,7 +399,7 @@ const LINES={bchoc:['Base de chocolate de la fuente. Sin culpa.'],bcara:['Base d
   topping:['agregado. Qué buen gusto.','agregado. Se ve peligrosamente bien.','agregado. Esto ya es arte.']};
 
 /* ---------- estado ---------- */
-let S={fruit:null,size:'m',base:null,tops:[],shots:[],sp:'both'};
+let S={fruit:null,size:'m',base:null,tops:[],shots:[],sp:'top'};
 const hist=[];
 const $=id=>document.getElementById(id);
 const NS='http://www.w3.org/2000/svg';
@@ -605,7 +605,7 @@ PH.bchoc=PH.choc;PH.bcara=PH.cara;Object.assign(PH,{"crema": "data:image/webp;ba
 FRUITS.forEach(o=>opt($('gFruit'),'fruit',o,o.n));
 SIZES.forEach(o=>opt($('gSize'),'size',o));
 BASES.forEach(o=>opt($('gBase'),'base',o,o.n,o.sub));
-GROUPS.forEach(G=>{const h=document.createElement('div');h.className='gh';h.innerHTML=`<b>${G.n}</b><span>${G.h}</span>`;$('gTop').appendChild(h);if(G.id==='sp'){const t=document.createElement('div');t.className='spmode';t.innerHTML='<span>¿Cómo los quieres?</span><button data-m="both" class="on">Embarrado + arriba</button><button data-m="wall">Solo embarrado</button><button data-m="top">Solo arriba</button>';t.querySelectorAll('button').forEach(b=>b.onclick=()=>{hist.push(JSON.stringify(S));S.sp=b.dataset.m;draw('sp');sync();say(S.sp==='wall'?'Embarrado en el vaso, como en las especiales.':S.sp==='top'?'Capa arriba. Brillosita.':'Embarrado y arriba. Sin miedo.')});$('gTop').appendChild(t)}const g=document.createElement('div');g.className='grid';$('gTop').appendChild(g);TOPS.filter(t=>t.g===G.id).forEach(o=>opt(g,'top',o,o.n))});
+GROUPS.forEach(G=>{const h=document.createElement('div');h.className='gh';h.innerHTML=`<b>${G.n}</b><span>${G.h}</span>`;$('gTop').appendChild(h);if(false){const t=document.createElement('div');t.className='spmode';t.innerHTML='<span>¿Cómo los quieres?</span><button data-m="both" class="on">Embarrado + arriba</button><button data-m="wall">Solo embarrado</button><button data-m="top">Solo arriba</button>';t.querySelectorAll('button').forEach(b=>b.onclick=()=>{hist.push(JSON.stringify(S));S.sp=b.dataset.m;draw('sp');sync();say(S.sp==='wall'?'Embarrado en el vaso, como en las especiales.':S.sp==='top'?'Capa arriba. Brillosita.':'Embarrado y arriba. Sin miedo.')});$('gTop').appendChild(t)}const g=document.createElement('div');g.className='grid';$('gTop').appendChild(g);TOPS.filter(t=>t.g===G.id).forEach(o=>opt(g,'top',o,o.n))});
 
 SHOTS.forEach(o=>opt($('gShot'),'shot',o,o.n));
 
@@ -681,7 +681,6 @@ const POSN={fresa:'Fresas',platano:'Platanos',combinado:'Combinado',ch:'Chico',m
  choc:'Chocolate',cara:'Caramelo'};
 function posItem(){const f=freeIds(),it={producto:POSN[S.fruit],tamano:POSN[S.size],base:POSN[S.base],incluidos:[],basicos:[],premium:[],shots:S.shots.map(x=>POSN[x])};
   S.tops.forEach(id=>{const o=TOPS.find(t=>t.id===id);(o.g!=='cl'?it.premium:f.includes(id)?it.incluidos:it.basicos).push(POSN[id])});
-  if(S.tops.some(id=>TOPS.find(t=>t.id===id).g==='sp')) it.spreads=({both:'Embarrado + arriba',wall:'Solo embarrado',top:'Solo arriba'})[S.sp];
   return it}
 let SUCS=[];
 rpc('web_pedido_sucursales').then(d=>{SUCS=Array.isArray(d)?d:[];$('tSend').hidden=!SUCS.length});
@@ -692,7 +691,7 @@ $('tSend').onclick=()=>{const sel=$('fSuc');sel.innerHTML='';SUCS.forEach(x=>{co
   $('fErr').innerHTML='';view('vForm')};
 $('fBack').onclick=()=>view('vTicket');
 $('vForm').onsubmit=async e=>{e.preventDefault();const b=$('fGo');b.disabled=true;b.textContent='Mandando…';$('fErr').innerHTML='';
-  const C=calc();const nota=S.tops.some(id=>TOPS.find(t=>t.id===id).g==='sp')?('Spreads: '+({both:'Embarrado + arriba',wall:'Solo embarrado',top:'Solo arriba'})[S.sp]):null;
+  const C=calc();const nota=null;
   const r=await rpc('web_pedido_crear',{p_sucursal:$('fSuc').value,p_telefono:$('fTel').value,p_nombre:$('fNom').value,p_item:posItem(),p_qty:+$('fQty').value,p_nota:nota});
   b.disabled=false;b.textContent='Mandar pedido';
   if(!r){$('fErr').textContent='No pudimos mandarlo. Revisa tu internet e intenta otra vez.';return}
