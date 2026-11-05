@@ -308,7 +308,7 @@ h1{font-family:'Brice',sans-serif;font-weight:900;color:var(--vino);text-transfo
     <p class="name" id="tName">hecha a tu antojo</p>
     <div id="vTicket">
     <ul id="tList"></ul>
-    <button class="btn fill big" id="tSend" hidden>Mandar a tienda y recoger</button>
+    <button class="btn fill big" id="tSend" hidden>Apartar en tienda</button>
     <p id="tShow">Enséñale esta pantalla en barra y te la preparamos tal cual.<br><small>Precios en tienda. En apps de delivery pueden variar.</small></p>
     <div class="row">
       <button class="btn" id="tBack">Seguir armando</button>
@@ -316,7 +316,7 @@ h1{font-family:'Brice',sans-serif;font-weight:900;color:var(--vino);text-transfo
     </div>
     </div>
     <form id="vForm" hidden>
-      <p class="fl">Te la preparamos y pasas por ella. <b>Pagas al recoger.</b></p>
+      <p class="fl">Mandamos tu pedido a la tienda para que esté listo para cobrarse. <b>Se prepara en cuanto pagues en mostrador.</b></p>
       <label class="fld"><span>Sucursal</span><select id="fSuc" required></select></label>
       <label class="fld"><span>Tu teléfono de Lady Lovers</span><input id="fTel" type="tel" inputmode="numeric" autocomplete="tel" placeholder="55 1234 5678" required></label>
       <label class="fld"><span>¿A nombre de quién?</span><input id="fNom" type="text" autocomplete="given-name" maxlength="40" placeholder="Tu nombre"></label>
@@ -328,7 +328,7 @@ h1{font-family:'Brice',sans-serif;font-weight:900;color:var(--vino);text-transfo
       <p class="sfolio">Pedido <b id="sFolio">W000</b></p>
       <div class="sbig" id="sBig">Enviado</div>
       <p class="smsg" id="sMsg"></p>
-      <ol class="steps" id="sSteps"><li>Enviado</li><li>Aceptado</li><li>Listo</li></ol>
+      <ol class="steps" id="sSteps"><li>Enviado</li><li>Recibido</li><li>Pagado</li></ol>
       <p class="sdet" id="sDet"></p>
       <div class="row"><button type="button" class="btn" id="sCancel">Cancelar pedido</button><button type="button" class="btn fill" id="sClose">Cerrar</button></div>
     </div>
@@ -700,14 +700,14 @@ $('vForm').onsubmit=async e=>{e.preventDefault();const b=$('fGo');b.disabled=tru
   try{localStorage.setItem('lf_tel',$('fTel').value);localStorage.setItem('lf_nom',$('fNom').value);localStorage.setItem('lf_ped',r.token)}catch(e){}
   track(r.token)};
 let trackT=null,trackTok=null;
-const SMAP={nuevo:['Enviado','La tienda está revisando tu pedido. Te avisamos aquí.',1],aceptado:['¡Aceptado!','Ya lo estamos preparando.',2],listo:['¡Listo!','Pasa por él a barra y di tu folio. Pagas al recoger.',3],entregado:['Entregado','¡Que lo disfrutes! 🍓',3],rechazado:['No se pudo','',0],cancelado:['Cancelado','Cancelaste este pedido.',0],vencido:['Vencido','Este pedido ya no está activo.',0]};
+const SMAP={nuevo:['Enviado','La tienda está revisando tu pedido. Te avisamos aquí.',1],aceptado:['¡Te esperamos!','Acércate al mostrador, di tu folio y paga. En cuanto pagues, lo preparamos.',2],listo:['¡Te esperamos!','Acércate al mostrador, di tu folio y paga. En cuanto pagues, lo preparamos.',2],entregado:['¡Pagado!','Ya lo estamos preparando. ¡Que lo disfrutes! 🍓',3],rechazado:['No se pudo','',0],cancelado:['Cancelado','Cancelaste este pedido.',0],vencido:['Vencido','Este pedido ya no está activo.',0]};
 async function track(tok){trackTok=tok;view('vStatus');$('modal').classList.add('open');clearTimeout(trackT);
   const d=await rpc('web_pedido_estado',{p_token:tok});
   if(!d){$('sMsg').textContent='Revisando…';trackT=setTimeout(()=>track(tok),8000);return}
   const m=SMAP[d.estado]||['',''];$('sFolio').textContent=d.folio;$('sBig').textContent=m[0];
-  let msg=m[1];if(d.estado==='aceptado'&&d.minutos)msg=`Listo en unos ${d.minutos} min en ${d.sucursal}.`;if(d.estado==='rechazado')msg=d.motivo||'La tienda no pudo tomar tu pedido. Pídelo directo en barra.';
+  let msg=m[1];if(d.estado==='aceptado')msg=`Acércate al mostrador de ${d.sucursal}, di tu folio y paga. En cuanto pagues, lo preparamos.`;if(d.estado==='rechazado')msg=d.motivo||'La tienda no pudo tomar tu pedido. Pídelo directo en barra.';
   $('sMsg').textContent=msg;[...$('sSteps').children].forEach((li,i)=>li.classList.toggle('on',i<m[2]));
-  const it=d.item||{};$('sDet').textContent=`${d.qty>1?d.qty+' × ':''}${it.producto} ${it.tamano} · ${it.base}\n${[...(it.incluidos||[]),...(it.basicos||[]),...(it.premium||[]),...(it.shots||[])].join(', ')}\nTotal a pagar en ${d.sucursal}: $${d.total}`;
+  const it=d.item||{};$('sDet').textContent=`${d.qty>1?d.qty+' × ':''}${it.producto} ${it.tamano} · ${it.base}\n${[...(it.incluidos||[]),...(it.basicos||[]),...(it.premium||[]),...(it.shots||[])].join(', ')}\nTotal a pagar en mostrador de ${d.sucursal}: $${d.total}`;
   $('sCancel').hidden=d.estado!=='nuevo';
   if(['nuevo','aceptado','listo'].includes(d.estado)){trackT=setTimeout(()=>track(tok),8000)}else{try{localStorage.removeItem('lf_ped')}catch(e){}}}
 $('sCancel').onclick=async()=>{if(!trackTok)return;await rpc('web_pedido_cancelar',{p_token:trackTok});track(trackTok)};
