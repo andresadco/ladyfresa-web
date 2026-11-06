@@ -160,7 +160,8 @@ h1{font-family:'Brice',sans-serif;font-weight:900;color:var(--vino);text-transfo
 .steps li::before{counter-increment:s;content:counter(s);position:absolute;top:0;left:50%;transform:translateX(-50%);width:24px;height:24px;border-radius:50%;border:2px solid var(--linea);background:#fff;line-height:24px;font-size:12px}
 .steps li.on{color:var(--vino)}.steps li.on::before{background:var(--vino);border-color:var(--vino);color:#fff;content:'✓'}
 .sdet{font-size:13px;color:var(--suave);margin:0 0 14px;text-align:left;white-space:pre-line}
-.sp-add{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.sp-add{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.sp-card .sp-add>*{width:100%;box-sizing:border-box;flex:0 0 auto}
 .sp-add select{flex:1 1 90px;min-width:0;font:inherit;font-size:13px;padding:8px;border:1.5px solid var(--linea);border-radius:10px;background:#fff;color:var(--texto)}
 .addbtn{flex:1 1 80px;border:0;border-radius:999px;background:var(--vino);color:var(--crema);font-weight:700;font-size:14px;padding:10px 12px;min-height:40px}
 .addbtn.ok{background:#5A2A33}
