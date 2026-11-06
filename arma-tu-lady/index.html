@@ -144,7 +144,21 @@ h1{font-family:'Brice',sans-serif;font-weight:900;color:var(--vino);text-transfo
 .spmode{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 2px 10px;font-size:13px;color:var(--suave)}.spmode button{border:1.5px solid var(--linea);background:var(--crema);border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:700;color:var(--vino-d)}.spmode button.on{background:var(--vino);border-color:var(--vino);color:var(--crema)}
 .opt small.pr,.sizes .opt .pr{color:var(--vino);font-weight:700}
 .ticket li.tot{border-bottom:0;font-size:17px;padding-top:12px}.ticket li.tot b{font-family:'Brice',sans-serif;font-weight:900;font-size:24px;color:var(--vino)}
-.ticket ul{max-height:46vh;overflow:auto}
+.ticket ul{max-height:30vh;overflow:auto}
+.bautizo{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:8px;margin:0 0 12px;text-align:left}
+.bautizo label{display:flex;flex-direction:column;justify-content:flex-end;gap:4px;font-size:12px;font-weight:700;color:var(--vino);min-width:0}
+.bautizo label small{font-weight:600;color:var(--suave)}
+.bautizo input{font:inherit;font-size:15px;font-weight:600;color:var(--texto);border:1.5px solid var(--linea);border-radius:12px;padding:10px 11px;background:#fff;min-width:0}
+.bautizo input:focus{outline:2px solid var(--vino);outline-offset:1px}
+.row.comp{margin:10px 0 0}
+.btn.share{background:linear-gradient(135deg,#F58529,#DD2A7B 55%,#8134AF);color:#fff;border:0}
+.compartida{position:relative;z-index:4;margin:0 0 10px;background:var(--vino);color:var(--crema);border-radius:18px;padding:12px 16px;font-size:14px;line-height:1.35;text-align:center}
+.compartida b{font-family:'Brice',sans-serif;font-weight:900;text-transform:uppercase;font-size:18px;display:block}
+.misladies{max-width:1180px;margin:0 auto 8px;padding:0 14px;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none}
+.misladies>b{flex:0 0 auto;font-size:13px;color:var(--vino)}
+.ml{flex:0 0 auto;display:flex;align-items:center;gap:6px;background:#fff;border:1.5px solid var(--linea);border-radius:999px;padding:6px 6px 6px 12px;font:inherit;font-size:13px;font-weight:700;color:var(--vino)}
+.ml i{font-style:normal;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--suave);font-size:14px}
+.ml i:hover{background:var(--crema)}
 .btn.big{width:100%;padding:15px;font-size:16px;margin:0 0 12px}
 .fl{font-size:14px;margin:0 0 12px}
 .fld{display:flex;flex-direction:column;gap:4px;text-align:left;margin-bottom:10px;font-size:13px;font-weight:700;color:var(--vino-d)}
@@ -274,6 +288,8 @@ body.mini .stage{position:relative}
   <div class="head">
     <h1>Arma tu Lady</h1>
     <p class="sub">Toca lo que se te antoje y ve cómo se arma tu vaso. Aquí no se pide perdón, se pide doble topping.</p>
+    <div class="compartida" id="compartida" hidden></div>
+    <div class="misladies" id="misLadies" hidden><b>💾 Tus Ladies:</b><span id="mlList" style="display:flex;gap:8px"></span></div>
   </div>
 
   <section class="stage" aria-label="Tu vaso">
@@ -397,8 +413,10 @@ body.mini .stage{position:relative}
     <h3 id="mTitle">Tu Lady</h3>
     <p class="name" id="tName">hecha a tu antojo</p>
     <div id="vTicket">
+    <div class="bautizo"><label>Ponle nombre a tu Lady<input id="tNom" maxlength="22" autocomplete="off" placeholder="La Consentida"></label><label>¿Quién la creó?<input id="tDe" maxlength="18" autocomplete="given-name" placeholder="Opcional"></label></div>
     <ul id="tList"></ul>
     <button class="btn fill big" id="tAdd">Agregar a mi pedido</button>
+    <div class="row comp"><button class="btn share" id="tShare">📸 Compártela</button><button class="btn" id="tSave">💾 Guárdala</button></div>
     <p id="tShow"><small>Precios en tienda. En apps de delivery pueden variar.</small></p>
     <div class="row">
       <button class="btn" id="tBack">Seguir armando</button>
@@ -815,7 +833,10 @@ $('done').onclick=()=>{view('vTicket');
   const C=calc();C.L.forEach(([k,v])=>{const li=document.createElement('li');li.innerHTML=`<span></span><b></b>`;li.querySelector('span').textContent=k;li.querySelector('b').textContent=v?money(v):'incluido';ul.appendChild(li)});
   const li=document.createElement('li');li.className='tot';li.innerHTML=`<span>Total</span><b>${money(C.total)}</b>`;ul.appendChild(li);
   const names=['La Consentida','La Atrevida','La de Siempre','La Sin Culpa','La Coqueta'];
-  $('tName').textContent=S.tops.length>freeIds().length?'La Atrevida':pick(names);
+  const sug=S.tops.length>freeIds().length?'La Atrevida':pick(names);
+  $('tNom').placeholder=sug; if(!$('tNom').dataset.u) $('tNom').value='';
+  try{ if(!$('tDe').value) $('tDe').value=localStorage.getItem('lf_de')||localStorage.getItem('lf_nom')||''; }catch(e){}
+  $('tName').textContent=nomLady();
   $('modal').classList.add('open');
 };
 
@@ -857,7 +878,8 @@ $('cMore').onclick=()=>$('modal').classList.remove('open');
 $('cEmpty').onclick=()=>{CART=[];saveCart();renderCartBar();openCart()};
 $('tAdd').onclick=()=>{const C=calc(),sz=SIZES.find(z=>z.id===S.size),fr=FRUITS.find(f=>f.id===S.fruit),b=BASES.find(x=>x.id===S.base);
   const extras=[...S.tops.map(id=>TOPS.find(t=>t.id===id).n),...S.shots.map(id=>'Shot '+SHOTS.find(x=>x.id===id).n.toLowerCase())];
-  cartAdd({label:`${fr.n} ${sz.lbl} ${sz.oz} oz`,desc:[b.n,...extras].join(' · '),price:C.total,data:{tipo:'arma',...posItem()}});
+  const nl=($('tNom').value||'').trim();
+  cartAdd({label:`${fr.n} ${sz.lbl} ${sz.oz} oz`+(nl?` · “${nl}”`:''),desc:[b.n,...extras].join(' · '),price:C.total,data:{tipo:'arma',...posItem()}});
   hist.length=0;S={fruit:null,size:'m',base:null,tops:[],shots:[],sp:'top'};draw(null);sync();say('¡Agregada a tu pedido! Arma otra o revisa tu pedido 🍓');openCart()};
 document.querySelectorAll('.addbtn').forEach(btn=>btn.onclick=()=>{
   let id=+btn.dataset.pid,n=btn.dataset.n,price=+btn.dataset.p,data,desc='';
@@ -894,6 +916,94 @@ $('sClose').onclick=()=>{clearTimeout(trackT);$('modal').classList.remove('open'
 try{const t=localStorage.getItem('lf_ped');if(t)track(t)}catch(e){}
 
 $('tBack').onclick=()=>$('modal').classList.remove('open');
+
+/* ---------- ponle nombre, compártela y guárdala ---------- */
+function nomLady(){ return (($('tNom').value||'').trim())||$('tNom').placeholder||'Mi Lady'; }
+$('tNom').oninput=()=>{ $('tNom').dataset.u=$('tNom').value?'1':''; $('tName').textContent=nomLady(); };
+$('tDe').oninput=()=>{ try{localStorage.setItem('lf_de',$('tDe').value.trim())}catch(e){} };
+function codLady(st){ st=st||S; return [st.fruit,st.size,st.base,st.tops.join('.'),st.shots.join('.')].join('~'); }
+function decLady(c){
+  const [f,z,b,t,sh]=String(c||'').split('~');
+  if(!FRUITS.some(x=>x.id===f)||!SIZES.some(x=>x.id===z)) return null;
+  const tops=(t||'').split('.').filter(id=>TOPS.some(x=>x.id===id)).slice(0,12);
+  const shots=(sh||'').split('.').filter(id=>SHOTS.some(x=>x.id===id));
+  return {fruit:f,size:z,base:BASES.some(x=>x.id===b)?b:null,tops,shots,sp:'top'};
+}
+function linkLady(nom,de){ const u=new URL(location.origin+location.pathname); u.searchParams.set('l',codLady()); if(nom) u.searchParams.set('n',nom); if(de) u.searchParams.set('de',de); return u.toString(); }
+function cargaImg(src){ return new Promise((ok,ko)=>{ const i=new Image(); i.onload=()=>ok(i); i.onerror=ko; i.src=src; }); }
+async function imagenLady(nom,de){
+  try{ await Promise.all(['900 120px Brice','60px NothingPena'].map(f=>document.fonts.load(f))); }catch(e){}
+  const W=1080,H=1920,c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
+  x.fillStyle='#FFF7F3'; x.fillRect(0,0,W,H);
+  const g=x.createRadialGradient(W/2,930,60,W/2,930,620); g.addColorStop(0,'#F7D6DC'); g.addColorStop(1,'rgba(255,247,243,0)'); x.fillStyle=g; x.fillRect(0,0,W,H);
+  x.textAlign='center';
+  try{ const lg=await cargaImg(LOGO); const lw=330, lh=lw*lg.height/lg.width; x.drawImage(lg,(W-lw)/2,90,lw,lh); }catch(e){}
+  x.fillStyle='#A6182E'; x.font='58px NothingPena, cursive'; x.fillText(de?'creada por '+de:'así la pedí yo',W/2,330);
+  let fs=150; const t=nom.toUpperCase(); do{ x.font=`900 ${fs}px Brice, sans-serif`; fs-=6; }while(x.measureText(t).width>960&&fs>60);
+  x.fillText(t,W/2,470);
+  // el vaso, tal cual lo armaste
+  const sv=$('side').cloneNode(true); sv.setAttribute('xmlns','http://www.w3.org/2000/svg'); sv.setAttribute('width','700'); sv.setAttribute('height','945'); sv.removeAttribute('aria-hidden');
+  const xml=new XMLSerializer().serializeToString(sv);
+  try{ const ci=await cargaImg('data:image/svg+xml;charset=utf-8,'+encodeURIComponent(xml)); x.drawImage(ci,(W-700)/2,430,700,945); }catch(e){}
+  // lo que lleva
+  const fr=FRUITS.find(f=>f.id===S.fruit), sz=SIZES.find(z=>z.id===S.size), b=BASES.find(q=>q.id===S.base);
+  x.fillStyle='#5A2A33'; x.font='600 38px system-ui, sans-serif';
+  x.fillText([fr&&fr.n, 'vaso '+sz.lbl+' '+sz.oz+' oz', b&&b.n].filter(Boolean).join(' · '),W/2,1440);
+  const its=[...S.tops.map(id=>({img:PH[id],n:TOPS.find(o=>o.id===id).n})),...S.shots.map(id=>({img:PH[id],n:'Shot '+SHOTS.find(o=>o.id===id).n.toLowerCase()}))].slice(0,6);
+  const R=58, gap=24, tw=its.length*(R*2)+(its.length-1)*gap; let cx=(W-tw)/2+R;
+  for(const it of its){
+    x.save(); x.beginPath(); x.arc(cx,1540,R,0,7); x.fillStyle='#fff'; x.shadowColor='rgba(90,42,51,.25)'; x.shadowBlur=14; x.fill(); x.restore();
+    if(it.img){ try{ const im=await cargaImg(it.img); x.save(); x.beginPath(); x.arc(cx,1540,R-6,0,7); x.clip(); x.drawImage(im,cx-R+6,1540-R+6,(R-6)*2,(R-6)*2); x.restore(); }catch(e){} }
+    x.fillStyle='#5A2A33'; x.font='600 22px system-ui, sans-serif'; x.fillText(it.n.length>14?it.n.slice(0,13)+'…':it.n,cx,1540+R+30); cx+=R*2+gap;
+  }
+  // pie
+  x.fillStyle='#A6182E'; const pw=760,ph=96,px=(W-pw)/2,py=1752; x.beginPath(); x.roundRect?x.roundRect(px,py,pw,ph,48):x.rect(px,py,pw,ph); x.fill();
+  x.fillStyle='#FFF7F3'; x.font='700 40px system-ui, sans-serif'; x.fillText('Arma la tuya en ladyfresa.com',W/2,py+62);
+  x.fillStyle='#A6182E'; x.font='48px NothingPena, cursive'; x.fillText('#MiLadyFresa',W/2,1712);
+  return await new Promise(ok=>c.toBlob(ok,'image/png'));
+}
+$('tShare').onclick=async()=>{
+  if(!S.fruit||!S.base) return;
+  const b=$('tShare'), nom=nomLady(), de=($('tDe').value||'').trim(); b.disabled=true; b.textContent='Preparando…';
+  try{
+    const link=linkLady(nom,de), blob=await imagenLady(nom,de);
+    const file=new File([blob],'mi-lady-fresa.png',{type:'image/png'});
+    const txt=`Así pedí mi Lady: “${nom}” 🍓 Pídela igualita aquí: ${link} #MiLadyFresa`;
+    if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:nom,text:txt}).catch(()=>{}); }
+    else { const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='mi-lady-fresa.png'; document.body.appendChild(a); a.click(); a.remove(); try{ await navigator.clipboard.writeText(txt); say('Imagen descargada y link copiado 📸'); }catch(e){ say('Imagen descargada 📸'); } }
+  }catch(e){ say('No se pudo preparar la imagen'); }
+  b.disabled=false; b.textContent='📸 Compártela';
+};
+function misLadies(){ try{ return JSON.parse(localStorage.getItem('lf_mis_ladies')||'[]'); }catch(e){ return []; } }
+function pintaMisLadies(){
+  const L=misLadies(), box=$('misLadies'); box.hidden=!L.length;
+  $('mlList').innerHTML=L.map((m,i)=>`<button type="button" class="ml" data-i="${i}">${{fresa:'🍓',platano:'🍌',combinado:'🍓🍌'}[(m.c||'').split('~')[0]]||'🍓'} ${m.n.replace(/[<>&"]/g,'')}<i data-x="${i}" title="Quitar">×</i></button>`).join('');
+  $('mlList').querySelectorAll('.ml').forEach(bt=>bt.onclick=e=>{
+    const L2=misLadies();
+    if(e.target.dataset.x!==undefined){ L2.splice(+e.target.dataset.x,1); try{localStorage.setItem('lf_mis_ladies',JSON.stringify(L2))}catch(_){} pintaMisLadies(); return; }
+    const m=L2[+bt.dataset.i], st=m&&decLady(m.c); if(!st) return;
+    hist.push(JSON.stringify(S)); S=st; draw(null); sync(); $('tNom').value=m.n; $('tNom').dataset.u='1';
+    say(`Lista tu “${m.n}” 🍓`); const sg=document.querySelector('.stage'); scrollTo({top:Math.max(0,sg.getBoundingClientRect().top+scrollY-8),behavior:'smooth'});
+  });
+}
+$('tSave').onclick=()=>{
+  if(!S.fruit||!S.base) return;
+  const n=nomLady(), c=codLady(); let L=misLadies().filter(m=>m.c!==c&&m.n!==n); L.unshift({n,c,ts:Date.now()}); L=L.slice(0,12);
+  try{ localStorage.setItem('lf_mis_ladies',JSON.stringify(L)); }catch(e){}
+  pintaMisLadies(); $('tSave').textContent='¡Guardada! 💾'; setTimeout(()=>$('tSave').textContent='💾 Guárdala',1600);
+};
+// Abrir una Lady compartida (?l=...&n=...&de=...)
+(()=>{ const q=new URLSearchParams(location.search), st=decLady(q.get('l'));
+  pintaMisLadies();
+  if(!st) return;
+  const n=(q.get('n')||'').slice(0,22), de=(q.get('de')||'').slice(0,18);
+  S=st; draw(null); sync(); if(n){ $('tNom').value=n; $('tNom').dataset.u='1'; }
+  say(n?`Lista: “${n}” 🍓`:'Lista para pedirla 🍓');
+  const bx=$('compartida'); bx.hidden=false;
+  bx.innerHTML=`<b></b><span></span>`; bx.querySelector('b').textContent=n||'Una Lady compartida';
+  bx.querySelector('span').textContent=(de?'Creada por '+de+'. ':'')+'Ya está armada: dale “Ya quedó” para pedirla igualita, o cámbiale lo que quieras 🍓';
+  setTimeout(()=>{ const sg=document.querySelector('.stage'); scrollTo({top:Math.max(0,bx.getBoundingClientRect().top+scrollY-10),behavior:'smooth'}); },400);
+})();
 $('modal').onclick=e=>{if(e.target.id==='modal')$('modal').classList.remove('open')};
 $('tCopy').onclick=async()=>{
   const C=calc();const txt='Mi Lady 🍓\n'+C.L.map(([k,v])=>`${k}: ${v?money(v):'incluido'}`).join('\n')+`\nTotal: ${money(C.total)}`;
