@@ -204,13 +204,20 @@ body.mini .minibar{transform:none}
 body.mini .stage{position:relative}
 .minibar.bump{animation:mbump .45s ease}
 @keyframes mbump{40%{transform:scale(1.035)}}
-.mb-cup{position:relative;width:54px;height:62px;flex:0 0 auto;background:var(--crema);border-radius:14px;overflow:hidden}
-.mb-cup .rcup{position:absolute!important;left:50%!important;top:54%!important;width:50px!important;transform:translate(-50%,-50%)!important}
+.mb-cup{position:relative;width:76px;height:88px;flex:0 0 auto;background:var(--crema);border-radius:14px;overflow:hidden}
+.mb-cup .rcup{position:absolute!important;left:50%!important;top:54%!important;width:70px!important;transform:translate(-50%,-50%)!important}
 .mb-cup .rhint,.mb-cup .rb{display:none!important}
 .mb-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
 .mb-txt b{font-size:13.5px;line-height:1.2;color:var(--texto);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .mb-txt small{font-size:11.5px;color:var(--suave);font-weight:600}
 .mb-txt small.ok{color:var(--vino)}
+.mb-chips{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;max-height:44px;overflow:hidden}
+.mb-chips i{font-style:normal;font-size:10.5px;font-weight:700;line-height:1;padding:4px 7px;border-radius:999px;background:var(--crema);color:var(--vino);white-space:nowrap}
+.mb-chips i.x{background:var(--vino);color:var(--crema)}
+.borrar{position:absolute;top:14px;right:14px;z-index:4;background:#fff;border:1.5px solid var(--linea);border-radius:999px;color:var(--vino);font-weight:700;font-size:13px;padding:7px 12px;transition:opacity .2s}
+.borrar:disabled{opacity:0;pointer-events:none}
+.borrar2{display:block;margin:12px auto 0;background:none;border:1.5px solid var(--linea);border-radius:999px;color:var(--vino);font-weight:700;font-size:14px;padding:10px 18px}
+.borrar2:disabled{opacity:.4}
 .mb-tot{font-family:'Brice',sans-serif;font-weight:900;color:var(--vino);font-size:19px;white-space:nowrap}
 .mb-go{width:30px;height:30px;flex:0 0 auto;border-radius:50%;background:var(--vino);color:var(--crema);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
 /* palomita en cada paso listo */
@@ -268,6 +275,7 @@ body.mini .stage{position:relative}
   </div>
 
   <section class="stage" aria-label="Tu vaso">
+    <button type="button" class="borrar" id="borrar" disabled>🗑 Borrar todo</button>
     <div class="chip-tot" id="chipTot">Vaso mediano · 16 oz</div>
     <div class="viewtog" role="tablist" hidden><button id="vSide" class="on">De lado</button><button id="vTop">Desde arriba</button></div>
     <div class="recipe" id="recipe">
@@ -333,7 +341,7 @@ body.mini .stage{position:relative}
       <button class="undo" id="undo" disabled>Deshacer</button>
     </div>
   </section>
-  <button type="button" class="minibar" id="minibar" aria-hidden="true" tabindex="-1"><span class="mb-cup" id="mbCup"></span><span class="mb-txt"><b id="mbRes">Elige tu fruta</b><small id="mbPasos"></small></span><span class="mb-tot" id="mbTot">$135</span><span class="mb-go" aria-hidden="true">↑</span></button>
+  <button type="button" class="minibar" id="minibar" aria-hidden="true" tabindex="-1"><span class="mb-cup" id="mbCup"></span><span class="mb-txt"><b id="mbRes">Elige tu fruta</b><small id="mbPasos"></small><span class="mb-chips" id="mbChips"></span></span><span class="mb-tot" id="mbTot">$135</span><span class="mb-go" aria-hidden="true">↑</span></button>
 
   <section class="panel">
     <div class="step">
@@ -363,6 +371,7 @@ body.mini .stage{position:relative}
       <div class="grid" id="gShot"></div>
     </div>
     <button class="done" id="done"><span>Ya quedó · <span id="doneTot">$135</span></span><span>Ver mi Lady →</span></button>
+    <button type="button" class="borrar2" id="borrar2" disabled>🗑 Borrar todo y empezar de nuevo</button>
   </section>
 </main>
 <button type="button" class="cartbar" id="cartbar" hidden><span>Mi pedido · <b id="cbN">0</b></span><span id="cbT">$0</span><span class="cbgo">Ver →</span></button>
@@ -741,6 +750,14 @@ function miniSync(){
   p.textContent=falta?'Te falta: '+falta:(freeIds().length<FREE?'Te quedan '+(FREE-freeIds().length)+' toppings gratis':'¡Ya está lista! ✓');
   p.classList.toggle('ok',!falta);
   $('mbTot').textContent=money(calc().total);
+  // lo que le vas poniendo, para no tener que volver a subir
+  const ch=[]; if(b) ch.push([b.n,0]);
+  const cnt={}; S.tops.forEach(id=>cnt[id]=(cnt[id]||0)+1);
+  Object.entries(cnt).forEach(([id,n])=>{ const o=TOPS.find(t=>t.id===id); if(o) ch.push([o.n+(n>1?' ×'+n:''),1]); });
+  S.shots.forEach(id=>{ const o=SHOTS.find(x=>x.id===id); if(o) ch.push(['Shot '+o.n.toLowerCase(),1]); });
+  $('mbChips').innerHTML=ch.map(([t,x])=>`<i class="${x?'x':''}">${t}</i>`).join('');
+  const vacio=!S.fruit&&!S.base&&!S.tops.length&&!S.shots.length&&S.size==='m';
+  $('borrar').disabled=vacio; $('borrar2').disabled=vacio;
   clearTimeout(miniSync._t); miniSync._t=setTimeout(miniCopa,550);
   const mb=$('minibar'); if(document.body.classList.contains('mini')){ mb.classList.remove('bump'); void mb.offsetWidth; mb.classList.add('bump'); }
 }
@@ -763,6 +780,14 @@ function miniScroll(){
 addEventListener('scroll',miniScroll,{passive:true}); addEventListener('resize',miniScroll);
 $('minibar').onclick=()=>{ const st=document.querySelector('.stage'); scrollTo({top:Math.max(0,st.getBoundingClientRect().top+scrollY-8),behavior:'smooth'}); };
 
+function borrarTodo(){
+  if(!S.fruit&&!S.base&&!S.tops.length&&!S.shots.length&&S.size==='m') return;
+  hist.push(JSON.stringify(S));
+  S={fruit:null,size:'m',base:null,tops:[],shots:[],sp:S.sp};
+  draw(null); sync(); say('Vaso vacío. ¡A empezar! 🍓');
+  const st=document.querySelector('.stage'); scrollTo({top:Math.max(0,st.getBoundingClientRect().top+scrollY-8),behavior:'smooth'});
+}
+$('borrar').onclick=borrarTodo; $('borrar2').onclick=borrarTodo;
 $('undo').onclick=()=>{if(!hist.length)return;S=JSON.parse(hist.pop());draw(null);sync();say('Listo, como antes.')};
 
 function calc(){const L=[];const sz=SIZES.find(z=>z.id===S.size);const fr=FRUITS.find(f=>f.id===S.fruit);
