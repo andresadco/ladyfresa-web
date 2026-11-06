@@ -148,7 +148,7 @@ h1{font-family:'Brice',sans-serif;font-weight:900;color:var(--vino);text-transfo
 .bautizo{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:8px;margin:0 0 12px;text-align:left}
 .bautizo label{display:flex;flex-direction:column;justify-content:flex-end;gap:4px;font-size:12px;font-weight:700;color:var(--vino);min-width:0}
 .bautizo label small{font-weight:600;color:var(--suave)}
-.bautizo input{font:inherit;font-size:15px;font-weight:600;color:var(--texto);border:1.5px solid var(--linea);border-radius:12px;padding:10px 11px;background:#fff;min-width:0}
+.bautizo input{font:inherit;font-size:16px;font-weight:600;color:var(--texto);border:1.5px solid var(--linea);border-radius:12px;padding:10px 11px;background:#fff;min-width:0}
 .bautizo input:focus{outline:2px solid var(--vino);outline-offset:1px}
 .row.comp{margin:10px 0 0}
 .btn.share{background:linear-gradient(135deg,#F58529,#DD2A7B 55%,#8134AF);color:#fff;border:0}
@@ -242,6 +242,15 @@ body.mini .stage{position:relative}
 /* especial abierta desde el inicio */
 .sp-card{scroll-margin-top:70px}
 .sp-card:target{outline:3px solid #F28C28;outline-offset:2px;box-shadow:0 12px 30px -12px rgba(242,140,40,.6)}
+/* iPhone hace zoom si el campo tiene letra menor a 16px */
+@media (max-width:899px){input,select,textarea{font-size:16px!important}}
+.guardar-tel{display:none;margin:10px 0 0;padding:12px;border-radius:16px;background:#fff;border:1.5px solid var(--linea);text-align:left}
+.guardar-tel.on{display:block}
+.guardar-tel p{margin:0 0 8px;font-size:13px;color:var(--texto)}
+.guardar-tel div{display:flex;gap:8px}
+.guardar-tel input{flex:1;min-width:0;font:inherit;border:1.5px solid var(--linea);border-radius:12px;padding:10px 11px}
+.guardar-tel small{display:block;margin-top:6px;font-size:12px;color:var(--vino)}
+.guardar-tel small a{color:var(--vino);font-weight:700}
 @media (min-width:900px){
   .minibar{display:none}
   .wrap{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:start}
@@ -417,6 +426,7 @@ body.mini .stage{position:relative}
     <ul id="tList"></ul>
     <button class="btn fill big" id="tAdd">Agregar a mi pedido</button>
     <div class="row comp"><button class="btn share" id="tShare">📸 Compártela</button><button class="btn" id="tSave">💾 Guárdala</button></div>
+    <div class="guardar-tel" id="gTel"><p>Guárdala en tu cuenta <b>Lady Lovers</b> para tenerla en cualquier cel y en tienda:</p><div><input id="gTelIn" type="tel" inputmode="numeric" autocomplete="tel" placeholder="Tu teléfono (10 dígitos)"><button class="btn fill" id="gTelOk" type="button">Guardar</button></div><small id="gTelMsg"></small></div>
     <p id="tShow"><small>Precios en tienda. En apps de delivery pueden variar.</small></p>
     <div class="row">
       <button class="btn" id="tBack">Seguir armando</button>
@@ -779,7 +789,8 @@ function miniSync(){
   $('mbChips').innerHTML=ch.map(([t,x])=>`<i class="${x?'x':''}">${t}</i>`).join('');
   const vacio=!S.fruit&&!S.base&&!S.tops.length&&!S.shots.length&&S.size==='m';
   $('borrar').disabled=vacio; $('borrar2').disabled=vacio;
-  clearTimeout(miniSync._t); miniSync._t=setTimeout(miniCopa,550);
+  clearTimeout(miniSync._t); if(document.body.classList.contains('mini')) miniSync._t=setTimeout(miniCopa,550);
+  imgLista=null;
   const mb=$('minibar'); if(document.body.classList.contains('mini')){ mb.classList.remove('bump'); void mb.offsetWidth; mb.classList.add('bump'); }
 }
 function miniCopa(){
@@ -837,7 +848,8 @@ $('done').onclick=()=>{view('vTicket');
   $('tNom').placeholder=sug; if(!$('tNom').dataset.u) $('tNom').value='';
   try{ if(!$('tDe').value) $('tDe').value=localStorage.getItem('lf_de')||localStorage.getItem('lf_nom')||''; }catch(e){}
   $('tName').textContent=nomLady();
-  $('modal').classList.add('open');
+  $('gTel').classList.remove('on'); $('gTelMsg').textContent='';
+  $('modal').classList.add('open'); setTimeout(preparaImg,350);
 };
 
 /* ---------- pedidos a tienda ---------- */
@@ -943,8 +955,8 @@ async function imagenLady(nom,de){
   x.fillText(t,W/2,470);
   // el vaso, tal cual lo armaste
   const sv=$('side').cloneNode(true); sv.setAttribute('xmlns','http://www.w3.org/2000/svg'); sv.setAttribute('width','700'); sv.setAttribute('height','945'); sv.removeAttribute('aria-hidden');
-  const xml=new XMLSerializer().serializeToString(sv);
-  try{ const ci=await cargaImg('data:image/svg+xml;charset=utf-8,'+encodeURIComponent(xml)); x.drawImage(ci,(W-700)/2,430,700,945); }catch(e){}
+  const xml=new XMLSerializer().serializeToString(sv), su=URL.createObjectURL(new Blob([xml],{type:'image/svg+xml'}));
+  try{ const ci=await cargaImg(su); await new Promise(r=>setTimeout(r,120)); x.drawImage(ci,(W-700)/2,430,700,945); }catch(e){} finally{ URL.revokeObjectURL(su); }
   // lo que lleva
   const fr=FRUITS.find(f=>f.id===S.fruit), sz=SIZES.find(z=>z.id===S.size), b=BASES.find(q=>q.id===S.base);
   x.fillStyle='#5A2A33'; x.font='600 38px system-ui, sans-serif';
@@ -962,11 +974,23 @@ async function imagenLady(nom,de){
   x.fillStyle='#A6182E'; x.font='48px NothingPena, cursive'; x.fillText('#MiLadyFresa',W/2,1712);
   return await new Promise(ok=>c.toBlob(ok,'image/png'));
 }
+// La imagen se prepara en cuanto abres "Tu Lady" o cambias el nombre: así al tocar Compártela se abre al instante
+var imgLista=null, imgClave="", imgProm=null;
+function preparaImg(){
+  if(!S.fruit||!S.base) return null;
+  const nom=nomLady(), de=($('tDe').value||'').trim(), k=codLady()+'|'+nom+'|'+de;
+  if(imgLista&&imgClave===k) return Promise.resolve(imgLista);
+  if(imgProm&&imgProm.k===k) return imgProm;
+  imgProm=imagenLady(nom,de).then(b=>{ if(imgProm&&imgProm.k===k){ imgLista=b; imgClave=k; } return b; }); imgProm.k=k; return imgProm;
+}
+let _pT=null; function preparaLuego(){ clearTimeout(_pT); _pT=setTimeout(preparaImg,700); }
+$('tNom').addEventListener('input',preparaLuego); $('tDe').addEventListener('input',preparaLuego);
 $('tShare').onclick=async()=>{
   if(!S.fruit||!S.base) return;
   const b=$('tShare'), nom=nomLady(), de=($('tDe').value||'').trim(); b.disabled=true; b.textContent='Preparando…';
   try{
-    const link=linkLady(nom,de), blob=await imagenLady(nom,de);
+    const link=linkLady(nom,de), blob=await preparaImg();
+    rpc('lf_lady_evento',{p_codigo:codLady(),p_nombre:nom,p_tipo:'compartir'});
     const file=new File([blob],'mi-lady-fresa.png',{type:'image/png'});
     const txt=`Así pedí mi Lady: “${nom}” 🍓 Pídela igualita aquí: ${link} #MiLadyFresa`;
     if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:nom,text:txt}).catch(()=>{}); }
@@ -975,27 +999,52 @@ $('tShare').onclick=async()=>{
   b.disabled=false; b.textContent='📸 Compártela';
 };
 function misLadies(){ try{ return JSON.parse(localStorage.getItem('lf_mis_ladies')||'[]'); }catch(e){ return []; } }
+function telGuardado(){ try{ return (localStorage.getItem('lf_tel')||'').replace(/\D/g,'').slice(-10); }catch(e){ return ''; } }
+function guardaLocal(L){ try{ localStorage.setItem('lf_mis_ladies',JSON.stringify(L.slice(0,20))); }catch(e){} }
+// Trae las Ladies guardadas en su cuenta (si ya dio su teléfono alguna vez)
+function syncNube(){ const t=telGuardado(); if(t.length!==10) return; rpc('lf_lady_mis',{p_tel:t}).then(r=>{ if(r&&r.ok){ const loc=misLadies().filter(m=>!m.id&&!r.ladies.some(x=>x.c===m.c)); guardaLocal([...r.ladies,...loc]); pintaMisLadies(); } }); }
 function pintaMisLadies(){
   const L=misLadies(), box=$('misLadies'); box.hidden=!L.length;
   $('mlList').innerHTML=L.map((m,i)=>`<button type="button" class="ml" data-i="${i}">${{fresa:'🍓',platano:'🍌',combinado:'🍓🍌'}[(m.c||'').split('~')[0]]||'🍓'} ${m.n.replace(/[<>&"]/g,'')}<i data-x="${i}" title="Quitar">×</i></button>`).join('');
   $('mlList').querySelectorAll('.ml').forEach(bt=>bt.onclick=e=>{
     const L2=misLadies();
-    if(e.target.dataset.x!==undefined){ L2.splice(+e.target.dataset.x,1); try{localStorage.setItem('lf_mis_ladies',JSON.stringify(L2))}catch(_){} pintaMisLadies(); return; }
+    if(e.target.dataset.x!==undefined){ const q=L2.splice(+e.target.dataset.x,1)[0]; guardaLocal(L2); pintaMisLadies(); const t=telGuardado(); if(q&&q.id&&t) rpc('lf_lady_borrar',{p_tel:t,p_id:q.id}); return; }
     const m=L2[+bt.dataset.i], st=m&&decLady(m.c); if(!st) return;
     hist.push(JSON.stringify(S)); S=st; draw(null); sync(); $('tNom').value=m.n; $('tNom').dataset.u='1';
     say(`Lista tu “${m.n}” 🍓`); const sg=document.querySelector('.stage'); scrollTo({top:Math.max(0,sg.getBoundingClientRect().top+scrollY-8),behavior:'smooth'});
   });
 }
-$('tSave').onclick=()=>{
+async function guardaNube(tel){
+  const n=nomLady(), c=codLady(), de=($('tDe').value||'').trim();
+  const r=await rpc('lf_lady_guardar',{p_tel:tel,p_nombre:n,p_codigo:c,p_creador:de});
+  if(r&&r.ok){ try{localStorage.setItem('lf_tel',tel)}catch(e){} const loc=misLadies().filter(m=>!m.id&&!r.ladies.some(x=>x.c===m.c)&&m.c!==c); guardaLocal([...r.ladies,...loc]); pintaMisLadies(); return 'ok'; }
+  return (r&&r.error)||'red';
+}
+function guardaSoloAqui(){ const n=nomLady(), c=codLady(); let L=misLadies().filter(m=>m.c!==c); L.unshift({n,c,ts:Date.now()}); guardaLocal(L); pintaMisLadies(); }
+function listoGuardar(txt){ $('tSave').textContent=txt; setTimeout(()=>$('tSave').textContent='💾 Guárdala',1800); }
+$('tSave').onclick=async()=>{
   if(!S.fruit||!S.base) return;
-  const n=nomLady(), c=codLady(); let L=misLadies().filter(m=>m.c!==c&&m.n!==n); L.unshift({n,c,ts:Date.now()}); L=L.slice(0,12);
-  try{ localStorage.setItem('lf_mis_ladies',JSON.stringify(L)); }catch(e){}
-  pintaMisLadies(); $('tSave').textContent='¡Guardada! 💾'; setTimeout(()=>$('tSave').textContent='💾 Guárdala',1600);
+  const t=telGuardado();
+  if(t.length===10){ $('tSave').textContent='Guardando…'; const r=await guardaNube(t); if(r==='ok'){ $('gTel').classList.remove('on'); return listoGuardar('¡En tu cuenta! 💾'); } }
+  guardaSoloAqui(); listoGuardar('¡Guardada! 💾');
+  $('gTelIn').value=t; $('gTel').classList.add('on'); $('gTelMsg').textContent='';
+};
+$('gTelOk').onclick=async()=>{
+  const t=($('gTelIn').value||'').replace(/\D/g,'').slice(-10);
+  if(t.length!==10){ $('gTelMsg').textContent='Escribe tu teléfono a 10 dígitos.'; return; }
+  $('gTelOk').disabled=true; $('gTelOk').textContent='…';
+  const r=await guardaNube(t);
+  $('gTelOk').disabled=false; $('gTelOk').textContent='Guardar';
+  if(r==='ok'){ $('gTelMsg').textContent='¡Listo! Ya está en tu cuenta Lady Lovers 🍓'; setTimeout(()=>$('gTel').classList.remove('on'),1800); }
+  else if(r==='no_lady_lover') $('gTelMsg').innerHTML='Ese teléfono no está en Lady Lovers. <a href="https://app.ladyfresa.com/registro.html" target="_blank" rel="noopener">Regístrate gratis</a> y vuelve a guardarla (ya quedó guardada en este cel).';
+  else if(r==='limite') $('gTelMsg').textContent='Ya tienes 20 Ladies guardadas; borra alguna para guardar otra.';
+  else $('gTelMsg').textContent='No se pudo guardar ahorita, intenta de nuevo.';
 };
 // Abrir una Lady compartida (?l=...&n=...&de=...)
 (()=>{ const q=new URLSearchParams(location.search), st=decLady(q.get('l'));
-  pintaMisLadies();
+  pintaMisLadies(); syncNube();
   if(!st) return;
+  rpc('lf_lady_evento',{p_codigo:q.get('l'),p_nombre:q.get('n')||'',p_tipo:'abrir'});
   const n=(q.get('n')||'').slice(0,22), de=(q.get('de')||'').slice(0,18);
   S=st; draw(null); sync(); if(n){ $('tNom').value=n; $('tNom').dataset.u='1'; }
   say(n?`Lista: “${n}” 🍓`:'Lista para pedirla 🍓');
