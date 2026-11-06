@@ -1016,7 +1016,8 @@ function pintaMisLadies(){
 }
 async function guardaNube(tel){
   const n=nomLady(), c=codLady(), de=($('tDe').value||'').trim();
-  const r=await rpc('lf_lady_guardar',{p_tel:tel,p_nombre:n,p_codigo:c,p_creador:de});
+  const C=calc(), desc=C.L.map(([k])=>k).join(' · ');
+  const r=await rpc('lf_lady_guardar',{p_tel:tel,p_nombre:n,p_codigo:c,p_creador:de,p_desc:desc});
   if(r&&r.ok){ try{localStorage.setItem('lf_tel',tel)}catch(e){} const loc=misLadies().filter(m=>!m.id&&!r.ladies.some(x=>x.c===m.c)&&m.c!==c); guardaLocal([...r.ladies,...loc]); pintaMisLadies(); return 'ok'; }
   return (r&&r.error)||'red';
 }
