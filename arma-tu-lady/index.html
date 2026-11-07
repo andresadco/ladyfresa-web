@@ -136,6 +136,8 @@ h1{font-family:'Brice',sans-serif;font-weight:900;color:var(--vino);text-transfo
 .opt img.ph{width:64px;height:64px;border-radius:50%;object-fit:cover;display:block;box-shadow:0 2px 6px -2px rgba(90,42,51,.35)}
 .opt:active{transform:scale(.95)}
 .opt.on{border-color:var(--vino);background:#fff;box-shadow:0 0 0 2px var(--vino) inset}
+.opt .casa{position:absolute;top:-7px;left:-4px;background:#fff;color:var(--vino);border:1px solid var(--vino);font-size:9px;line-height:1;border-radius:999px;padding:3px 6px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
+.casa-leg{font-size:12px;color:var(--suave);margin:-6px 2px 10px}.casa-leg i{font-style:normal;background:#fff;color:var(--vino);border:1px solid var(--vino);font-size:9px;border-radius:999px;padding:2px 6px;font-weight:700;margin-right:4px}
 .opt .badge{position:absolute;top:-7px;right:-4px;background:var(--vino);color:var(--crema);font-size:10px;border-radius:999px;padding:2px 7px;font-weight:700}
 .opt small{font-weight:500;color:var(--suave);font-size:11px}
 .sizes{grid-template-columns:repeat(3,1fr)}
@@ -384,6 +386,7 @@ body.mini .stage{position:relative}
     <div class="step">
       <h2>3. Tu base<span class="ck" aria-hidden="true">✓</span></h2>
       <p class="hint">la que más se te antoje</p>
+      <p class="casa-leg"><i>🍓 hecho en casa</i>= receta nuestra, preparada en Lady Fresa</p>
       <div class="grid" id="gBase"></div>
     </div>
     <div class="step">
@@ -467,11 +470,11 @@ const FRUITS=[
   {id:'combinado',n:'Combinado'}];
 const SIZES=[{id:'ch',n:'CH',oz:12,s:.84,lbl:'chico'},{id:'m',n:'M',oz:16,s:.92,lbl:'mediano'},{id:'g',n:'G',oz:24,s:1,lbl:'grande'}];
 const BASES=[
-  {id:'crema',n:'Crema especial',c:'#FBF3E9',c2:'#F3E6D6'},
-  {id:'sinazucar',n:'Crema sin azúcar',c:'#FAF6F0',c2:'#EFE8DE'},
+  {id:'crema',casa:1,n:'Crema especial',c:'#FBF3E9',c2:'#F3E6D6'},
+  {id:'sinazucar',casa:1,n:'Crema sin azúcar',c:'#FAF6F0',c2:'#EFE8DE'},
   {id:'fit',n:'Base Fit',sub:'yogurt griego',c:'#FFFFFF',c2:'#ECEFEA'},
-  {id:'choco',n:'Chococrema',c:'#C89A7C',c2:'#A9785A'},
-  {id:'caramel',n:'Caramelcream',c:'#EBC89A',c2:'#D9A86C'},
+  {id:'choco',casa:1,n:'Chococrema',c:'#C89A7C',c2:'#A9785A'},
+  {id:'caramel',casa:1,n:'Caramelcream',c:'#EBC89A',c2:'#D9A86C'},
   {id:'bchoc',n:'Chocolate',sub:'de la fuente',c:'#6B3A26',c2:'#4A2317'},
   {id:'bcara',n:'Caramelo',sub:'de la fuente',c:'#D08A3C',c2:'#A86422'}];
 const PRICE={size:{ch:99,m:135,g:149},base:{crema:0,sinazucar:0,fit:15,choco:15,caramel:15,bchoc:25,bcara:25},extra:15,premium:25,shot:25};
@@ -486,28 +489,28 @@ const TOPS=[
   {g:'cl',id:'girasol',n:'Girasol dulce',d:'Garapiñado.',t:'seed',c:['#C98B45','#B07636','#D9A15C'],k:26},
   {g:'cl',id:'coco',n:'Hojuelas de coco',d:'Coco rayado y tostado.',t:'shred',c:['#F5E6CC','#E5C79A','#FFF4E2'],k:30},
   {g:'cl',id:'chips',n:'Choco chips',d:'Mini chispas.',t:'chip',c:['#3B1E14','#4F291B'],k:26},
-  {g:'cl',id:'amaranto',n:'Amaranto especial',d:'Con miel, dulce y crujiente.',t:'dot',c:['#F1E3C2','#E6D2A6'],k:70},
+  {g:'cl',id:'amaranto',casa:1,n:'Amaranto especial',d:'Con miel, dulce y crujiente.',t:'dot',c:['#F1E3C2','#E6D2A6'],k:70},
   {g:'cl',id:'mm',n:"M&M's",d:'Dulces, divertidos y crujientes.',t:'disk',c:['#C8102E','#F2B705','#1E73BE','#2E9E48','#E86F1C','#5B2E1F'],k:13},
-  {g:'cl',id:'ajonjoli',n:'Ajonjolí especial',d:'Dulce y caramelizado.',t:'seed',c:['#E2C48E','#D4AE6E'],k:45,sm:1},
+  {g:'cl',id:'ajonjoli',casa:1,n:'Ajonjolí especial',d:'Dulce y caramelizado.',t:'seed',c:['#E2C48E','#D4AE6E'],k:45,sm:1},
   {g:'cl',id:'lechera',n:'Lechera',d:'Leche condensada original.',t:'drizzle',c:['#FFF6E4']},
-  {g:'cl',id:'guayabazo',n:'Guayabazo',d:'Crujiente con ate de guayaba.',t:'cube',c:['#D9534F','#E2725B','#C9443F'],k:14},
-  {g:'cl',id:'granola',n:'Granola LMF',d:'Lo mejor de nuestros toppings, combinado.',t:'chunk',c:['#B9874F','#9E6E3B','#CFA06A'],k:22},
-  {g:'cl',id:'nutella',n:'Nutella crujiente',d:'Nutella a nuestra manera.',t:'chunk',c:['#6B3A22','#8A5233','#4E2918'],k:22},
-  {g:'cr',id:'crlotus',n:'Crumble Lotus',d:'Galleta Lotus en su mejor versión.',t:'chunk',c:['#C2884A','#A8713A','#D49A5C'],k:24},
-  {g:'cr',id:'crferrero',n:'Crumble Ferrero',d:'Ferrero a nuestra manera.',t:'chunk',c:['#7A4A28','#C9A24A','#5E371C'],k:24},
-  {g:'cl',id:'crcanela',n:'Crumble de canela',d:'Canela, maple y vainilla.',t:'chunk',c:['#C79A62','#A97842','#DDB27A'],k:24},
-  {g:'cl',id:'crmatcha',n:'Crumble de matcha',d:'Nuestro crujiente de matcha.',t:'chunk',c:['#8FA65A','#7A9148','#A7BC72'],k:24},
-  {g:'cl',id:'crcacao',n:'Crumble de cacao',d:'Nuestro crujiente de cacao.',t:'chunk',c:['#4A2A1E','#5E3727','#3A2018'],k:24},
-  {g:'cl',id:'mazesp',n:'Mazapán especial',d:'Receta crujiente LMF.',t:'chunk',c:['#E3BF8A','#D2A970','#EED2A6'],k:22},
+  {g:'cl',id:'guayabazo',casa:1,n:'Guayabazo',d:'Crujiente con ate de guayaba.',t:'cube',c:['#D9534F','#E2725B','#C9443F'],k:14},
+  {g:'cl',id:'granola',casa:1,n:'Granola LMF',d:'Lo mejor de nuestros toppings, combinado.',t:'chunk',c:['#B9874F','#9E6E3B','#CFA06A'],k:22},
+  {g:'cl',id:'nutella',casa:1,n:'Nutella crujiente',d:'Nutella a nuestra manera.',t:'chunk',c:['#6B3A22','#8A5233','#4E2918'],k:22},
+  {g:'cr',id:'crlotus',casa:1,n:'Crumble Lotus',d:'Galleta Lotus en su mejor versión.',t:'chunk',c:['#C2884A','#A8713A','#D49A5C'],k:24},
+  {g:'cr',id:'crferrero',casa:1,n:'Crumble Ferrero',d:'Ferrero a nuestra manera.',t:'chunk',c:['#7A4A28','#C9A24A','#5E371C'],k:24},
+  {g:'cl',id:'crcanela',casa:1,n:'Crumble de canela',d:'Canela, maple y vainilla.',t:'chunk',c:['#C79A62','#A97842','#DDB27A'],k:24},
+  {g:'cl',id:'crmatcha',casa:1,n:'Crumble de matcha',d:'Nuestro crujiente de matcha.',t:'chunk',c:['#8FA65A','#7A9148','#A7BC72'],k:24},
+  {g:'cl',id:'crcacao',casa:1,n:'Crumble de cacao',d:'Nuestro crujiente de cacao.',t:'chunk',c:['#4A2A1E','#5E3727','#3A2018'],k:24},
+  {g:'cl',id:'mazesp',casa:1,n:'Mazapán especial',d:'Receta crujiente LMF.',t:'chunk',c:['#E3BF8A','#D2A970','#EED2A6'],k:22},
   {g:'cr',id:'ferrero',n:'Ferrero crujiente',d:'Triturado.',t:'ball',c:['#C9A24A','#B8913A'],k:8},
   {g:'cr',id:'lotus',n:'Galleta Lotus',d:'Triturada.',t:'cookie',c:['#C2884A','#B07A3E'],k:10},
   {g:'cr',id:'kitkat',n:'Galleta Kit Kat',d:'Chocolate y barquillo crujiente.',t:'bar',c:['#5A2E1E','#6B3A26'],k:8},
   {g:'cr',id:'dubai',n:'Dubai crunch',d:'Kataifi crujiente con crema de pistache.',t:'shred',c:['#D9A75A','#93A85A','#C48F3E'],k:40},
   {g:'sp',id:'pistache',n:'Crema de pistache',d:'Pistache fino, dulce y seductor.',t:'drizzle',c:['#A3B26A']},
-  {g:'sp',id:'avellana',n:'Crema de avellana',d:'Salsa artesanal de avellana.',t:'drizzle',c:['#6B3A22']},
+  {g:'sp',id:'avellana',casa:1,n:'Crema de avellana',d:'Salsa artesanal de avellana.',t:'drizzle',c:['#6B3A22']},
   {g:'sp',id:'lotussalsa',n:'Lotus salsa',d:'Crema líquida de galleta Lotus.',t:'drizzle',c:['#B87A3C']},
-  {g:'sp',id:'matchasp',n:'Matcha spread',d:'Nuestra crema de matcha.',t:'drizzle',c:['#8FAA5A']},
-  {g:'sp',id:'cacaosp',n:'Cacao spread',d:'Cacao y cacahuate con crunch de nibs.',t:'drizzle',c:['#4A2A1E']}];
+  {g:'sp',id:'matchasp',casa:1,n:'Matcha spread',d:'Nuestra crema de matcha.',t:'drizzle',c:['#8FAA5A']},
+  {g:'sp',id:'cacaosp',casa:1,n:'Cacao spread',d:'Cacao y cacahuate con crunch de nibs.',t:'drizzle',c:['#4A2A1E']}];
 const GROUPS=[{id:'cl',n:'Clásicos',h:'2 incluidos · extra +$15'},{id:'cr',n:'Premium crunch',h:'+$25 c/u'},{id:'sp',n:'Cremas y spreads',h:'premium · +$25 c/u'}];
 const SHOTS=[{id:'choc',n:'Chocolate',c:'#4A2317'},{id:'cara',n:'Caramelo',c:'#C27A2C'}];
 const FREE=2;
@@ -720,7 +723,7 @@ function drawRecipe(anim){
 }
 /* ---------- UI ---------- */
 function opt(container,kind,o,label,sub){
-  const b=document.createElement('button');b.className='opt';b.dataset.id=o.id;
+  const b=document.createElement('button');b.className='opt';b.dataset.id=o.id;if(o.casa){const c=document.createElement('span');c.className='casa';c.textContent='🍓 hecho en casa';b.appendChild(c)}
   if(kind==='size'){b.innerHTML=`<b>${o.n}</b><small>${o.oz} oz · <span class="pr">${money(PRICE.size[o.id])}</span></small>`}
   else{if(PH[o.id]){const im=document.createElement('img');im.src=PH[o.id];im.alt='';im.className='ph';b.appendChild(im)}else b.appendChild(icon(kind,o));const t=document.createElement('span');t.textContent=label;b.appendChild(t);if(sub){const s=document.createElement('small');s.textContent=sub;b.appendChild(s)}const pv=kind==='base'?PRICE.base[o.id]:kind==='shot'?PRICE.shot:(kind==='top'&&o.g!=='cl')?PRICE.premium:0;if(pv){const p=document.createElement('small');p.className='pr';p.textContent='+'+money(pv);b.appendChild(p)}}
   b.onclick=()=>act(kind,o);container.appendChild(b);
