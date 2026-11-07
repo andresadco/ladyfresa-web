@@ -136,8 +136,8 @@ h1{font-family:'Brice',sans-serif;font-weight:900;color:var(--vino);text-transfo
 .opt img.ph{width:64px;height:64px;border-radius:50%;object-fit:cover;display:block;box-shadow:0 2px 6px -2px rgba(90,42,51,.35)}
 .opt:active{transform:scale(.95)}
 .opt.on{border-color:var(--vino);background:#fff;box-shadow:0 0 0 2px var(--vino) inset}
-.opt .casa{position:absolute;top:-7px;left:-4px;background:#fff;color:var(--vino);border:1px solid var(--vino);font-size:9px;line-height:1;border-radius:999px;padding:3px 6px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
-.casa-leg{font-size:12px;color:var(--suave);margin:-6px 2px 10px}.casa-leg i{font-style:normal;background:#fff;color:var(--vino);border:1px solid var(--vino);font-size:9px;border-radius:999px;padding:2px 6px;font-weight:700;margin-right:4px}
+.opt .casa{position:absolute;top:-6px;left:-6px;width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid var(--linea);box-shadow:0 1px 3px rgba(90,42,51,.18);font-size:11px;line-height:18px;text-align:center}
+.casa-leg{font-size:12px;color:var(--suave);margin:-6px 2px 10px}.casa-leg i{font-style:normal;display:inline-block;width:18px;height:18px;border-radius:50%;background:#fff;border:1px solid var(--linea);font-size:10px;line-height:16px;text-align:center;margin-right:4px}
 .opt .badge{position:absolute;top:-7px;right:-4px;background:var(--vino);color:var(--crema);font-size:10px;border-radius:999px;padding:2px 7px;font-weight:700}
 .opt small{font-weight:500;color:var(--suave);font-size:11px}
 .sizes{grid-template-columns:repeat(3,1fr)}
@@ -391,7 +391,7 @@ body.mini .stage{position:relative}
     <div class="step">
       <h2>4. Toppings<span class="ck" aria-hidden="true">✓</span></h2>
       <p class="hint">dos clásicos van por la casa</p>
-      <p class="casa-leg"><i>🍓 receta de la casa</i>= lo preparamos nosotros en Lady Fresa</p>
+      <p class="casa-leg"><i>🍓</i>= receta de la casa</p>
       <div class="counter" id="counter"></div>
       <div id="gTop"></div>
     </div>
@@ -506,7 +506,7 @@ const TOPS=[
   {g:'cr',id:'lotus',n:'Galleta Lotus',d:'Triturada.',t:'cookie',c:['#C2884A','#B07A3E'],k:10},
   {g:'cr',id:'kitkat',n:'Galleta Kit Kat',d:'Chocolate y barquillo crujiente.',t:'bar',c:['#5A2E1E','#6B3A26'],k:8},
   {g:'cr',id:'dubai',n:'Dubai crunch',d:'Kataifi crujiente con crema de pistache.',t:'shred',c:['#D9A75A','#93A85A','#C48F3E'],k:40},
-  {g:'sp',id:'pistache',n:'Crema de pistache',d:'Pistache fino, dulce y seductor.',t:'drizzle',c:['#A3B26A']},
+  {g:'sp',id:'pistache',casa:1,n:'Crema de pistache',d:'Pistache fino, dulce y seductor.',t:'drizzle',c:['#A3B26A']},
   {g:'sp',id:'avellana',casa:1,n:'Crema de avellana',d:'Salsa artesanal de avellana.',t:'drizzle',c:['#6B3A22']},
   {g:'sp',id:'lotussalsa',n:'Lotus salsa',d:'Crema líquida de galleta Lotus.',t:'drizzle',c:['#B87A3C']},
   {g:'sp',id:'matchasp',casa:1,n:'Matcha spread',d:'Nuestra crema de matcha.',t:'drizzle',c:['#8FAA5A']},
@@ -723,7 +723,7 @@ function drawRecipe(anim){
 }
 /* ---------- UI ---------- */
 function opt(container,kind,o,label,sub){
-  const b=document.createElement('button');b.className='opt';b.dataset.id=o.id;if(o.casa){const c=document.createElement('span');c.className='casa';c.textContent='🍓 receta de la casa';b.appendChild(c)}
+  const b=document.createElement('button');b.className='opt';b.dataset.id=o.id;if(o.casa){const c=document.createElement('span');c.className='casa';c.textContent='🍓';c.title='Receta de la casa';b.appendChild(c)}
   if(kind==='size'){b.innerHTML=`<b>${o.n}</b><small>${o.oz} oz · <span class="pr">${money(PRICE.size[o.id])}</span></small>`}
   else{if(PH[o.id]){const im=document.createElement('img');im.src=PH[o.id];im.alt='';im.className='ph';b.appendChild(im)}else b.appendChild(icon(kind,o));const t=document.createElement('span');t.textContent=label;b.appendChild(t);if(sub){const s=document.createElement('small');s.textContent=sub;b.appendChild(s)}const pv=kind==='base'?PRICE.base[o.id]:kind==='shot'?PRICE.shot:(kind==='top'&&o.g!=='cl')?PRICE.premium:0;if(pv){const p=document.createElement('small');p.className='pr';p.textContent='+'+money(pv);b.appendChild(p)}}
   b.onclick=()=>act(kind,o);container.appendChild(b);
