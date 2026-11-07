@@ -386,7 +386,7 @@ body.mini .stage{position:relative}
     <div class="step">
       <h2>3. Tu base<span class="ck" aria-hidden="true">✓</span></h2>
       <p class="hint">la que más se te antoje</p>
-      <p class="casa-leg"><i>🍓 hecho en casa</i>= receta nuestra, preparada en Lady Fresa</p>
+      <p class="casa-leg"><i>🍓 receta de la casa</i>= lo preparamos nosotros en Lady Fresa</p>
       <div class="grid" id="gBase"></div>
     </div>
     <div class="step">
@@ -723,7 +723,7 @@ function drawRecipe(anim){
 }
 /* ---------- UI ---------- */
 function opt(container,kind,o,label,sub){
-  const b=document.createElement('button');b.className='opt';b.dataset.id=o.id;if(o.casa){const c=document.createElement('span');c.className='casa';c.textContent='🍓 hecho en casa';b.appendChild(c)}
+  const b=document.createElement('button');b.className='opt';b.dataset.id=o.id;if(o.casa){const c=document.createElement('span');c.className='casa';c.textContent='🍓 receta de la casa';b.appendChild(c)}
   if(kind==='size'){b.innerHTML=`<b>${o.n}</b><small>${o.oz} oz · <span class="pr">${money(PRICE.size[o.id])}</span></small>`}
   else{if(PH[o.id]){const im=document.createElement('img');im.src=PH[o.id];im.alt='';im.className='ph';b.appendChild(im)}else b.appendChild(icon(kind,o));const t=document.createElement('span');t.textContent=label;b.appendChild(t);if(sub){const s=document.createElement('small');s.textContent=sub;b.appendChild(s)}const pv=kind==='base'?PRICE.base[o.id]:kind==='shot'?PRICE.shot:(kind==='top'&&o.g!=='cl')?PRICE.premium:0;if(pv){const p=document.createElement('small');p.className='pr';p.textContent='+'+money(pv);b.appendChild(p)}}
   b.onclick=()=>act(kind,o);container.appendChild(b);
