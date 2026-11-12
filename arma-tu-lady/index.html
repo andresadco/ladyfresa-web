@@ -924,8 +924,8 @@ document.querySelectorAll('.addbtn').forEach(btn=>btn.onclick=()=>{
   cartAdd({label:n,desc,price,data});btn.textContent='¡Agregada!';btn.classList.add('ok');setTimeout(()=>{btn.textContent='Agregar';btn.classList.remove('ok')},1300)});
 renderCartBar();$('cartbar').classList.remove('bump');
 
-$('cSend').onclick=()=>{const sel=$('fSuc');sel.innerHTML='';SUCS.forEach(x=>{const o=document.createElement('option');o.value=x.sucursal;o.textContent=x.sucursal+(x.estado==='pausa'?' (en pausa)':'');sel.appendChild(o)});
-  try{$('fTel').value=localStorage.getItem('lf_tel')||'';$('fNom').value=localStorage.getItem('lf_nom')||''}catch(e){}
+$('cSend').onclick=()=>{const sel=$('fSuc');sel.innerHTML='<option value="" disabled selected>Elige tu sucursal</option>';SUCS.forEach(x=>{const o=document.createElement('option');o.value=x.sucursal;o.textContent=x.sucursal+(x.estado==='pausa'?' (en pausa)':'');sel.appendChild(o)});
+  try{$('fTel').value=localStorage.getItem('lf_tel')||'';$('fNom').value=localStorage.getItem('lf_nom')||'';const ls=localStorage.getItem('lf_suc');if(ls&&SUCS.some(x=>x.sucursal===ls))sel.value=ls}catch(e){}
   $('fErr').innerHTML='';$('fPagoBox').hidden=!PAGO_LINEA;pintaIntro();view('vForm')};
 $('fBack').onclick=()=>openCart();
 $('vForm').onsubmit=async e=>{e.preventDefault();const b=$('fGo');b.disabled=true;b.textContent='Mandando…';$('fErr').innerHTML='';
@@ -934,7 +934,7 @@ $('vForm').onsubmit=async e=>{e.preventDefault();const b=$('fGo');b.disabled=tru
   b.disabled=false;pintaIntro();
   if(!r){$('fErr').textContent='No pudimos mandarlo. Revisa tu internet e intenta otra vez.';return}
   if(!r.ok){$('fErr').innerHTML=ERR[r.error]||('Algo no cuadró ('+r.error+'). Pídela directo en barra.');return}
-  try{localStorage.setItem('lf_tel',$('fTel').value);localStorage.setItem('lf_nom',$('fNom').value);localStorage.setItem('lf_ped',r.token)}catch(e){}
+  try{localStorage.setItem('lf_suc',$('fSuc').value);localStorage.setItem('lf_tel',$('fTel').value);localStorage.setItem('lf_nom',$('fNom').value);localStorage.setItem('lf_ped',r.token)}catch(e){}
   CART=[];saveCart();renderCartBar();
   if(r.pago==='en_linea'){b.disabled=true;b.textContent='Abriendo pago…';const q=await PG('crear',{token:r.token});if(q&&q.ok&&q.url){location.href=q.url;return}b.disabled=false;pintaIntro()}
   track(r.token)};
