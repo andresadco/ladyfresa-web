@@ -167,6 +167,11 @@ h1{font-family:'Brice',sans-serif;font-weight:900;color:var(--vino);text-transfo
 .fld{display:flex;flex-direction:column;gap:4px;text-align:left;margin-bottom:10px;font-size:13px;font-weight:700;color:var(--vino-d)}
 .fld input,.fld select{font:inherit;font-weight:500;font-size:16px;padding:11px 12px;border:1.5px solid var(--linea);border-radius:12px;background:#fff;color:var(--texto)}
 .fld input:focus,.fld select:focus{outline:2px solid var(--vino);outline-offset:1px}
+.pagos{display:flex;flex-direction:column;gap:8px;margin:2px 0 4px}
+.pagos label{display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--linea);border-radius:12px;padding:11px 12px;background:#fff;cursor:pointer;font-weight:700;color:var(--texto);font-size:15px}
+.pagos label small{display:block;font-weight:500;font-size:12.5px;color:var(--suave);margin-top:2px}
+.pagos input{accent-color:var(--vino);width:18px;height:18px;margin:1px 0 0;flex:none}
+.pagos label:has(input:checked){border-color:var(--vino);background:#fff7f8}
 .ferr{color:#9b1020;font-size:13.5px;font-weight:600;min-height:1em;margin:4px 0 10px}
 .ferr a{color:var(--vino)}
 .sfolio{margin:0;font-size:14px}.sfolio b{font-family:'Brice',sans-serif;font-size:22px;color:var(--vino)}
@@ -175,6 +180,7 @@ h1{font-family:'Brice',sans-serif;font-weight:900;color:var(--vino);text-transfo
 .steps{list-style:none;display:flex;justify-content:space-between;padding:0;margin:0 0 14px;counter-reset:s}
 .steps li{flex:1;text-align:center;font-size:12px;font-weight:700;color:var(--suave);position:relative;padding-top:30px}
 .steps li::before{counter-increment:s;content:counter(s);position:absolute;top:0;left:50%;transform:translateX(-50%);width:24px;height:24px;border-radius:50%;border:2px solid var(--linea);background:#fff;line-height:24px;font-size:12px}
+.ticket .steps li{display:block;padding:30px 2px 0;border-bottom:0;font-size:12px}
 .steps li.on{color:var(--vino)}.steps li.on::before{background:var(--vino);border-color:var(--vino);color:#fff;content:'✓'}
 .sdet{font-size:13px;color:var(--suave);margin:0 0 14px;text-align:left;white-space:pre-line}
 .sp-add{display:flex;flex-direction:column;gap:8px;margin-top:8px}
@@ -445,10 +451,14 @@ body.mini .stage{position:relative}
       <div class="row"><button type="button" class="btn" id="cMore">Seguir pidiendo</button><button type="button" class="btn" id="cEmpty">Vaciar</button></div>
     </div>
     <form id="vForm" hidden>
-      <p class="fl">Mandamos tu pedido a la tienda para que esté listo para cobrarse. <b>Se prepara en cuanto pagues en mostrador.</b></p>
+      <p class="fl" id="fIntro">Mandamos tu pedido a la tienda para que esté listo para cobrarse. <b>Se prepara en cuanto pagues en mostrador.</b></p>
       <label class="fld"><span>Sucursal</span><select id="fSuc" required></select></label>
       <label class="fld"><span>Tu teléfono de Lady Lovers</span><input id="fTel" type="tel" inputmode="numeric" autocomplete="tel" placeholder="55 1234 5678" required></label>
       <label class="fld"><span>¿A nombre de quién?</span><input id="fNom" type="text" autocomplete="given-name" maxlength="40" placeholder="Tu nombre"></label>
+      <div class="fld" id="fPagoBox" hidden><span>¿Cómo quieres pagar?</span><div class="pagos">
+        <label><input type="radio" name="fPago" value="en_linea" checked><span>💳 Pagar ahora<small>Con tarjeta o Mercado Pago. La tienda la prepara y solo llegas por ella.</small></span></label>
+        <label><input type="radio" name="fPago" value="mostrador"><span>Pagar en mostrador<small>Se prepara cuando pagues en la tienda.</small></span></label>
+      </div></div>
       <p class="ferr" id="fErr" role="alert"></p>
       <div class="row"><button type="button" class="btn" id="fBack">Regresar</button><button type="submit" class="btn fill" id="fGo">Mandar pedido</button></div>
     </form>
@@ -458,6 +468,7 @@ body.mini .stage{position:relative}
       <p class="smsg" id="sMsg"></p>
       <ol class="steps" id="sSteps"><li>Enviado</li><li>Recibido</li><li>Pagado</li></ol>
       <p class="sdet" id="sDet"></p>
+      <button type="button" class="btn fill big" id="sPay" hidden>💳 Pagar ahora</button>
       <div class="row"><button type="button" class="btn" id="sCancel">Cancelar pedido</button><button type="button" class="btn fill" id="sClose">Cerrar</button></div>
     </div>
   </div>
@@ -874,6 +885,15 @@ Promise.all(['Moctezuma','Narvarte','Balbuena'].map(t=>rpc('productos_limite_hoy
   $('pkQ').innerHTML='Hoy quedan: '+rs.map(([t,q])=>t+' <b>'+(q>0?q:'agotada')+'</b>').join(' · ');
   if(rs.every(([,q])=>q<=0)){const b=$('pkAdd');b.disabled=true;b.textContent='Agotada por hoy'}});
 rpc('web_pedido_sucursales').then(d=>{SUCS=Array.isArray(d)?d:[];$('cSend').hidden=!SUCS.length});
+let PAGO_LINEA=/[?&]pagar=1/.test(location.search);rpc('web_pago_linea').then(v=>{if(v===true)PAGO_LINEA=true});
+const PG=(fn,body)=>fetch(SB+'/functions/v1/lf-pago',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({accion:fn,...body})}).then(r=>r.json()).catch(()=>null);
+function pagoElegido(){const r=document.querySelector('input[name=fPago]:checked');return PAGO_LINEA&&r?r.value:'mostrador'}
+function pintaIntro(){$('fIntro').innerHTML=pagoElegido()==='en_linea'?'Pagas aquí y mandamos tu pedido a la tienda. <b>La preparan y solo llegas por ella.</b>':'Mandamos tu pedido a la tienda para que esté listo para cobrarse. <b>Se prepara en cuanto pagues en mostrador.</b>';$('fGo').textContent=pagoElegido()==='en_linea'?'Ir a pagar':'Mandar pedido'}
+document.querySelectorAll('input[name=fPago]').forEach(r=>r.onchange=pintaIntro);
+async function irAPagar(tok){const b=$('sPay');b.disabled=true;b.textContent='Abriendo pago…';const r=await PG('crear',{token:tok});
+  if(r&&r.ok&&r.url){location.href=r.url;return}
+  b.disabled=false;b.textContent='💳 Pagar ahora';if(r&&r.pagado){track(tok);return}
+  $('sMsg').textContent='No pudimos abrir el pago. Intenta otra vez en un momento.'}
 function view(v){['vTicket','vCart','vForm','vStatus'].forEach(id=>$(id).hidden=id!==v);$('mTitle').textContent=v==='vTicket'?'Tu Lady':'Tu pedido';$('tName').hidden=v!=='vTicket'}
 const ERR={sucursal_no_disponible:'Esa sucursal todavía no recibe pedidos en línea.',pausa:'La tienda pausó los pedidos un ratito por mucha fila. Intenta en unos minutos o pide directo en barra.',temprano:'Todavía no abrimos pedidos en línea: empezamos a las 11:00 am 🍓 Tu pedido se queda guardado aquí, vuelve más tarde para mandarlo.',cerrado:'La tienda ya cerró los pedidos en línea por hoy. Mañana desde las 11:00 am te lo preparamos 🍓',telefono:'Revisa tu teléfono: necesitamos 10 dígitos.',no_lady_lover:'Ese teléfono no está en Lady Lovers. Regístrate gratis y vuelve a intentarlo: <a href="https://app.ladyfresa.com/registro.html" target="_blank" rel="noopener">registrarme</a>.',ya_tienes_pedido:'Ya tienes un pedido en curso. Espera a recogerlo para hacer otro.',limite:'Ya hiciste varios pedidos hoy. Pide directo en barra.',cantidad:'Elige de 1 a 5 vasos.',agotado:'Ya se acabaron las Pumpking de hoy en esa tienda 🎃 Prueba en otra sucursal o mañana temprano.'};
 
@@ -906,30 +926,50 @@ renderCartBar();$('cartbar').classList.remove('bump');
 
 $('cSend').onclick=()=>{const sel=$('fSuc');sel.innerHTML='';SUCS.forEach(x=>{const o=document.createElement('option');o.value=x.sucursal;o.textContent=x.sucursal+(x.estado==='pausa'?' (en pausa)':'');sel.appendChild(o)});
   try{$('fTel').value=localStorage.getItem('lf_tel')||'';$('fNom').value=localStorage.getItem('lf_nom')||''}catch(e){}
-  $('fErr').innerHTML='';view('vForm')};
+  $('fErr').innerHTML='';$('fPagoBox').hidden=!PAGO_LINEA;pintaIntro();view('vForm')};
 $('fBack').onclick=()=>openCart();
 $('vForm').onsubmit=async e=>{e.preventDefault();const b=$('fGo');b.disabled=true;b.textContent='Mandando…';$('fErr').innerHTML='';
-    const r=await rpc('web_pedido_crear2',{p_sucursal:$('fSuc').value,p_telefono:$('fTel').value,p_nombre:$('fNom').value,p_items:CART.map(c=>({...c.data,qty:c.qty}))});
-  b.disabled=false;b.textContent='Mandar pedido';
+    const pago=pagoElegido();
+    const r=await rpc(pago==='en_linea'?'web_pedido_crear3':'web_pedido_crear2',Object.assign({p_sucursal:$('fSuc').value,p_telefono:$('fTel').value,p_nombre:$('fNom').value,p_items:CART.map(c=>({...c.data,qty:c.qty}))},pago==='en_linea'?{p_pago:'en_linea'}:{}));
+  b.disabled=false;pintaIntro();
   if(!r){$('fErr').textContent='No pudimos mandarlo. Revisa tu internet e intenta otra vez.';return}
   if(!r.ok){$('fErr').innerHTML=ERR[r.error]||('Algo no cuadró ('+r.error+'). Pídela directo en barra.');return}
   try{localStorage.setItem('lf_tel',$('fTel').value);localStorage.setItem('lf_nom',$('fNom').value);localStorage.setItem('lf_ped',r.token)}catch(e){}
   CART=[];saveCart();renderCartBar();
+  if(r.pago==='en_linea'){b.disabled=true;b.textContent='Abriendo pago…';const q=await PG('crear',{token:r.token});if(q&&q.ok&&q.url){location.href=q.url;return}b.disabled=false;pintaIntro()}
   track(r.token)};
 let trackT=null,trackTok=null;
-const SMAP={nuevo:['Enviado','La tienda está revisando tu pedido. Te avisamos aquí.',1],aceptado:['¡Te esperamos!','Acércate al mostrador, di tu folio y paga. En cuanto pagues, lo preparamos.',2],listo:['¡Te esperamos!','Acércate al mostrador, di tu folio y paga. En cuanto pagues, lo preparamos.',2],entregado:['¡Pagado!','Ya lo estamos preparando. ¡Que lo disfrutes! 🍓',3],rechazado:['No se pudo','',0],cancelado:['Cancelado','Cancelaste este pedido.',0],vencido:['Vencido','Este pedido ya no está activo.',0]};
+const SMAP_PAG={por_pagar:['Falta pagar','Tu pedido está apartado, pero falta pagarlo. En cuanto pagues lo mandamos a la tienda.',0],nuevo:['¡Pagado!','Ya está pagado y la tienda lo está recibiendo. Te avisamos aquí cuando la estén preparando.',1],aceptado:['Preparándola','La tienda ya la está preparando.',2],listo:['¡Ya está lista!','Ya está lista.',3],entregado:['¡Entregada!','¡Que la disfrutes! 🍓',3],rechazado:['No se pudo','',0],cancelado:['Cancelado','Este pedido se canceló.',0],vencido:['Vencido','Este pedido ya no está activo.',0]};
+const SMAP={por_pagar:SMAP_PAG.por_pagar,nuevo:['Enviado','La tienda está revisando tu pedido. Te avisamos aquí.',1],aceptado:['¡Te esperamos!','Acércate al mostrador, di tu folio y paga. En cuanto pagues, lo preparamos.',2],listo:['¡Te esperamos!','Acércate al mostrador, di tu folio y paga. En cuanto pagues, lo preparamos.',2],entregado:['¡Pagado!','Ya lo estamos preparando. ¡Que lo disfrutes! 🍓',3],rechazado:['No se pudo','',0],cancelado:['Cancelado','Cancelaste este pedido.',0],vencido:['Vencido','Este pedido ya no está activo.',0]};
 async function track(tok){trackTok=tok;view('vStatus');$('modal').classList.add('open');clearTimeout(trackT);
   const d=await rpc('web_pedido_estado',{p_token:tok});
   if(!d){$('sMsg').textContent='Revisando…';trackT=setTimeout(()=>track(tok),8000);return}
-  const m=SMAP[d.estado]||['',''];$('sFolio').textContent=d.folio;$('sBig').textContent=m[0];
-  let msg=m[1];if(d.estado==='aceptado')msg=`Acércate al mostrador de ${d.sucursal}, di tu folio y paga. En cuanto pagues, lo preparamos.`;if(d.estado==='rechazado')msg=d.motivo||'La tienda no pudo tomar tu pedido. Pídelo directo en barra.';
-  $('sMsg').textContent=msg;[...$('sSteps').children].forEach((li,i)=>li.classList.toggle('on',i<m[2]));
-  const its=d.items||[];$('sDet').textContent=its.map(it=>`${it.qty>1?it.qty+' × ':''}${it.producto}${it.tamano?' '+it.tamano:''}${it.base?' · '+it.base:''}${it.crema&&it.crema!=='Crema'?' · '+it.crema:''}`+(it.tipo==='arma'?`\n   ${[...(it.incluidos||[]),...(it.basicos||[]),...(it.premium||[]),...(it.shots||[])].join(', ')}`:'')).join('\n')+`\nTotal a pagar en mostrador de ${d.sucursal}: $${d.total}`;
-  $('sCancel').hidden=d.estado!=='nuevo';
-  if(['nuevo','aceptado','listo'].includes(d.estado)){trackT=setTimeout(()=>track(tok),8000)}else{try{localStorage.removeItem('lf_ped')}catch(e){}}}
+  const pag=d.pago==='en_linea'&&(d.pago_estado==='aprobado'||d.pago_estado==='reembolsado');
+  const m=(pag||d.estado==='por_pagar'?SMAP_PAG:SMAP)[d.estado]||['',''];$('sFolio').textContent=d.folio;$('sBig').textContent=m[0];
+  let msg=m[1];
+  if(!pag&&d.estado==='aceptado')msg=`Acércate al mostrador de ${d.sucursal}, di tu folio y paga. En cuanto pagues, lo preparamos.`;
+  if(pag&&d.estado==='aceptado')msg=`La tienda ya la está preparando. Llega a ${d.sucursal} y di tu folio: ya está pagada.`;
+  if(pag&&d.estado==='listo')msg=`Pasa a ${d.sucursal} por ella y di tu folio. Ya está pagada.`;
+  if(d.estado==='rechazado')msg=d.motivo||'La tienda no pudo tomar tu pedido. Pídelo directo en barra.';
+  if(pag&&['rechazado','cancelado','vencido'].includes(d.estado))msg+=d.reembolsado?' Ya te devolvimos tu pago completo; puede tardar unos días en verse en tu tarjeta.':' Te vamos a devolver tu pago completo.';
+  $('sMsg').textContent=msg;
+  const lbl=pag||d.estado==='por_pagar'?['Pagado','Preparando','Lista']:['Enviado','Recibido','Pagado'];
+  [...$('sSteps').children].forEach((li,i)=>{li.textContent=lbl[i];li.classList.toggle('on',i<m[2])});
+  $('sPay').hidden=d.estado!=='por_pagar';
+  const its=d.items||[];$('sDet').textContent=its.map(it=>`${it.qty>1?it.qty+' × ':''}${it.producto}${it.tamano?' '+it.tamano:''}${it.base?' · '+it.base:''}${it.crema&&it.crema!=='Crema'?' · '+it.crema:''}`+(it.tipo==='arma'?`\n   ${[...(it.incluidos||[]),...(it.basicos||[]),...(it.premium||[]),...(it.shots||[])].join(', ')}`:'')).join('\n')+(pag?`\nTotal pagado: $${d.total} · Recoges en ${d.sucursal}`:`\nTotal a pagar ${d.estado==='por_pagar'?'en línea':'en mostrador de '+d.sucursal}: $${d.total}`);
+  $('sCancel').hidden=!((d.estado==='nuevo'&&!pag)||d.estado==='por_pagar');
+  if(['por_pagar','nuevo','aceptado','listo'].includes(d.estado)){trackT=setTimeout(()=>track(tok),8000)}else{try{localStorage.removeItem('lf_ped')}catch(e){}}}
+$('sPay').onclick=()=>{if(trackTok)irAPagar(trackTok)};
 $('sCancel').onclick=async()=>{if(!trackTok)return;await rpc('web_pedido_cancelar',{p_token:trackTok});track(trackTok)};
 $('sClose').onclick=()=>{clearTimeout(trackT);$('modal').classList.remove('open');setTimeout(()=>view('vTicket'),300)};
-try{const t=localStorage.getItem('lf_ped');if(t)track(t)}catch(e){}
+(async()=>{const q=new URLSearchParams(location.search);const pt=q.get('t');
+  if(q.get('pago')&&/^[0-9a-f-]{36}$/.test(pt||'')){try{localStorage.setItem('lf_ped',pt)}catch(e){}
+    history.replaceState(null,'',location.pathname+location.hash);
+    view('vStatus');$('modal').classList.add('open');$('sBig').textContent='Revisando pago…';$('sMsg').textContent='Un segundo, estamos confirmando tu pago con Mercado Pago.';
+    const v=await PG('verificar',{token:pt});track(pt);
+    if(v&&v.pago_estado==='rechazado'&&q.get('pago')!=='ok')setTimeout(()=>{$('sMsg').textContent='Tu pago no pasó. Puedes intentar con otra tarjeta: tu pedido sigue apartado.'},900);
+    return}
+  try{const t=localStorage.getItem('lf_ped');if(t)track(t)}catch(e){}})();
 
 $('tBack').onclick=()=>$('modal').classList.remove('open');
 
