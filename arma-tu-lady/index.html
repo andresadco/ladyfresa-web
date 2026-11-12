@@ -446,7 +446,7 @@ body.mini .stage{position:relative}
     <div id="vCart" hidden>
       <ul class="cart" id="cList"></ul>
       <div class="ctot"><span>Total</span><b id="cTot">$0</b></div>
-      <button class="btn fill big" id="cSend" hidden>Apartar en tienda</button>
+      <button class="btn fill big" id="cSend" hidden>Pedir para recoger</button>
       <p class="fl" id="cShow">También puedes enseñar esta pantalla en barra y te lo preparamos tal cual.</p>
       <div class="row"><button type="button" class="btn" id="cMore">Seguir pidiendo</button><button type="button" class="btn" id="cEmpty">Vaciar</button></div>
     </div>
@@ -939,7 +939,7 @@ $('vForm').onsubmit=async e=>{e.preventDefault();const b=$('fGo');b.disabled=tru
   if(r.pago==='en_linea'){b.disabled=true;b.textContent='Abriendo pago…';const q=await PG('crear',{token:r.token});if(q&&q.ok&&q.url){location.href=q.url;return}b.disabled=false;pintaIntro()}
   track(r.token)};
 let trackT=null,trackTok=null;
-const SMAP_PAG={por_pagar:['Falta pagar','Tu pedido está apartado, pero falta pagarlo. En cuanto pagues lo mandamos a la tienda.',0],nuevo:['¡Pagado!','Ya está pagado y la tienda lo está recibiendo. Te avisamos aquí cuando la estén preparando.',1],aceptado:['Preparándola','La tienda ya la está preparando.',2],listo:['¡Ya está lista!','Ya está lista.',3],entregado:['¡Entregada!','¡Que la disfrutes! 🍓',3],rechazado:['No se pudo','',0],cancelado:['Cancelado','Este pedido se canceló.',0],vencido:['Vencido','Este pedido ya no está activo.',0]};
+const SMAP_PAG={por_pagar:['Falta pagar','Tu pedido está listo para mandarse, pero falta pagarlo. En cuanto pagues lo mandamos a la tienda.',0],nuevo:['¡Pagado!','Ya está pagado y la tienda lo está recibiendo. Te avisamos aquí cuando la estén preparando.',1],aceptado:['Preparándola','La tienda ya la está preparando.',2],listo:['¡Ya está lista!','Ya está lista.',3],entregado:['¡Entregada!','¡Que la disfrutes! 🍓',3],rechazado:['No se pudo','',0],cancelado:['Cancelado','Este pedido se canceló.',0],vencido:['Vencido','Este pedido ya no está activo.',0]};
 const SMAP={por_pagar:SMAP_PAG.por_pagar,nuevo:['Enviado','La tienda está revisando tu pedido. Te avisamos aquí.',1],aceptado:['¡Te esperamos!','Acércate al mostrador, di tu folio y paga. En cuanto pagues, lo preparamos.',2],listo:['¡Te esperamos!','Acércate al mostrador, di tu folio y paga. En cuanto pagues, lo preparamos.',2],entregado:['¡Pagado!','Ya lo estamos preparando. ¡Que lo disfrutes! 🍓',3],rechazado:['No se pudo','',0],cancelado:['Cancelado','Cancelaste este pedido.',0],vencido:['Vencido','Este pedido ya no está activo.',0]};
 async function track(tok){trackTok=tok;view('vStatus');$('modal').classList.add('open');clearTimeout(trackT);
   const d=await rpc('web_pedido_estado',{p_token:tok});
@@ -967,7 +967,7 @@ $('sClose').onclick=()=>{clearTimeout(trackT);$('modal').classList.remove('open'
     history.replaceState(null,'',location.pathname+location.hash);
     view('vStatus');$('modal').classList.add('open');$('sBig').textContent='Revisando pago…';$('sMsg').textContent='Un segundo, estamos confirmando tu pago con Mercado Pago.';
     const v=await PG('verificar',{token:pt});track(pt);
-    if(v&&v.pago_estado==='rechazado'&&q.get('pago')!=='ok')setTimeout(()=>{$('sMsg').textContent='Tu pago no pasó. Puedes intentar con otra tarjeta: tu pedido sigue apartado.'},900);
+    if(v&&v.pago_estado==='rechazado'&&q.get('pago')!=='ok')setTimeout(()=>{$('sMsg').textContent='Tu pago no pasó. Puedes intentar con otra tarjeta: tu pedido sigue guardado.'},900);
     return}
   try{const t=localStorage.getItem('lf_ped');if(t)track(t)}catch(e){}})();
 
